@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T23:20:47.451669+08:00",
+  "generated_at": "2026-07-05T23:31:19.614414+08:00",
   "total": 36,
   "items": [
     {
@@ -13,7 +13,7 @@
       "summary": "Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。",
       "text": "给你的 AI Agent 一键装上互联网能力 当下最稳的接入方式，替你选好、装好、体检好——接入方式会换代，你不用操心 快速开始 · English · 日本語 · 한국어 · 支持平台 · 设计理念 AI Agent 已经能帮你写代码、改文档、管项目——但你让它去网上找点东西，它就抓瞎了： - 📺 \"帮我看看这个 YouTube 教程讲了什么\" → 看不了，拿不到字幕 - 🐦 \"帮我搜一下推特上大家怎么评价这个产品\" → 搜不了，Twitter API 要付费 - 📖 \"去 Reddit 上看看有没有人遇到过同样的 bug\" → 403 被封，服务器 IP 被拒 - 📕 \"帮我看看小红书上这个品的口碑\" → 打不开，必须登录才能看 - 📺 \"B站上有个技术视频，帮我总结一下\" → 拿不到，通用下载工具被 B站风控全面拦截 - 🔍 \"帮我在网上搜一下最新的 LLM 框架对比\" → 没有好用的搜索，要么付费要么质量差 - 🌐 \"帮我看看这个网页写了啥\" → 抓回来一堆 HTML 标签，根本没法读 - 📦 \"这个 GitHub 仓库是干嘛的？Issue 里说了什么？\" → 能用，但认证配置很麻烦 - 📡 \"帮我订阅这几个 RSS 源，有更新告诉我\" → 要自己装库写代码 这些不难实现，但是需要自己折腾配置 每个平台都有自己的门槛——要付费的 API、要绕过的封锁、要登录的账号、要清洗的数据。你要一个一个去踩坑、装工具、调配置，光是让 Agent 能读个推特就得折腾半天。 Agent Reach 把这件事变成一句话： 帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md 复制给你的 Agent，几分钟后它就能读推特、搜 Reddit、看 YouTube、刷小红书了。 已经装过了？更新也是一句话： 帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md ⭐ Star 这个项目，我们会持续追踪各平台的变化、接入新的渠道。你不用自己盯——平台封了我们修，有新渠道我们加。 不知道怎么配？不用查文档。 直接告诉 Agent「帮我配 XXX」，它知道需要什么、会一步一步引导你。 🍪 需要 Cookie/登录态的平台（Twitter、小红书、Reddit、Facebook、Instagram 等），优先让用户在自己的浏览器里登录。OpenCLI 复用 Chrome 登录态；传统 CLI 才需要 Cookie-Editor 导出 Cookie。 🔒 Cookie 只存在你本地，不上传不外传。代码完全开源，随时可审查。 💻 本地电脑不需要代理。代理只有部署在服务器上才需要（~$1/月）。 ⚠️ OpenClaw 用户请先确认 exec 权限已开启Agent Reach 依赖 Agent 执行 shell 命令（ pip install 、mcporter 、messaging 工具配置，Agent 将无法执行命令。安装前请先开启 exec 权限：openclaw config set tools.profile \"coding\"或在 ~/.openclaw/openclaw.json 中设置\"tools\": { \"profile\": \"coding\" } 。 设置后重启 Gateway（openclaw gateway restart ）并开启新对话即可。其他平台（Claude Code、Cursor、Windsurf 等）不受此限制。 复制这句话给你的 AI Agent（Claude Code、OpenClaw、Cursor 等）： 帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md 就这一步。Agent 会自己完成剩下的所有事情。 🔄 已安装过？ 更新也是一句话： 帮我更新 Agent Reach：https://raw.githubusercont...",
       "score": 44,
-      "stars": 51073,
+      "stars": 51078,
       "forks": 4097
     },
     {
@@ -27,7 +27,7 @@
       "summary": "面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。",
       "text": "العربيه | Español | Português (Brasil) | Français | Deutsch | 简体中文 | 日本語 | Русский | 한국어 Selection methods · Fetchers · Spiders · Proxy Rotation · CLI · MCP Scrapling is an adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl. Its parser learns from website changes and automatically relocates your elements when pages update. Its fetchers bypass anti-bot systems like Cloudflare Turnstile out of the box. And its spider framework lets you scale up to concurrent, multi-session crawls with pause/resume and automatic proxy rotation - all in a few lines of Python. One library, zero compromises. Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers for Web Scrapers and regular users, there's something for everyone. from scrapling.fetchers import Fetcher, AsyncFetcher, StealthyFetcher, DynamicFetcher StealthyFetcher.adaptive = True p = StealthyFetcher.fetch('https://example.com', headless=True, network_idle=True) # Fetch website under the radar! products = p.css('.product', auto_save=True) # Scrape data that survives website design changes! products = p.css('.product', adaptive=True) # Later, if the website structure changes, pass `adaptive=True` to find them! Or scale up to full crawls from scrapling.spiders import Spider, Response class MySpider(Spider): name = \"demo\" start_urls = [\"https://example.com/\"] async def parse(self, response: Response): for item in response.css('.product'): yield {\"title\": item.css('h2::text').get()} MySpider().start() Do you want to show your ad here? Click here Do you want to show your ad here? Click here and choose the tier that suits you! - 🕷️ Scrapy-like Spider API: Define spiders with start_urls , asyncparse callbacks, andRequest /Response objects. - ⚡ Concurrent Crawling:...",
       "score": 37,
-      "stars": 68169,
+      "stars": 68171,
       "forks": 6749
     },
     {
@@ -37,7 +37,7 @@
       "kind": "page",
       "title": "GitHub Trending Python",
       "url": "https://github.com/trending/python?since=daily",
-      "published": "2026-07-05T15:20:46.159223+00:00",
+      "published": "2026-07-05T15:31:18.323862+00:00",
       "summary": "每日 Python 趋势仓库入口，用来发现可接入工作流的新工具。",
       "text": "337 Claude Code skills & agent skills & plugins (30+ Agents, 70+ custom commands, 330+ skills, customizable references, scripts)for Claude Code, Codex, Gemini CLI, Cursor, and 8 more coding agents — engineering, marketing, product, compliance, C-level advisory, research, business operations, commercial & finance, and your daily productivity skills. A beautiful, powerful, self-hosted rom manager and player. Machine Learning Systems Open-source AI penetration testing tool to find and fix your app’s vulnerabilities. A hand-picked collection of the finest of resources for the most awesome of agents, Claude Code, the undisputed champion of coding companions, from the unstoppable team at Anthropic PBC. A delectable showcase of top tier skills, ambidextrous agents, scintillating status lines, top notch developer tooling, and also we have plugins Persistent file-based planning for AI coding agents and long-running agentic tasks. Crash-proof markdown plans that survive context loss and /clear, plus a deterministic completion gate and multi-agent shared state on disk. Manus-style. Works with Claude Code, Codex CLI, Cursor, Kiro, OpenCode and 60+ agents via the SKILL.md standard. Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands. A list of free LLM inference resources accessible via API. TradingAgents: Multi-Agents LLM Financial Trading Framework Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude. A Python library for building AI agents that leverage the full power of Google Antigravity. Build local voice agents with open-source mo...",
       "score": 25,
@@ -51,7 +51,7 @@
       "kind": "page",
       "title": "GitHub Trending",
       "url": "https://github.com/trending?since=daily",
-      "published": "2026-07-05T15:20:47.450656+00:00",
+      "published": "2026-07-05T15:31:19.613340+00:00",
       "summary": "每日 GitHub 趋势入口，先看能不能接入工作流，再看星标热度。",
       "text": "Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Use Codex from Claude Code to review code or delegate tasks. Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT 5.5 Thinking, GPT 5.5 Instant, Codex. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly. Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop 337 Claude Code skills & agent skills & plugins (30+ Agents, 70+ custom commands, 330+ skills, customizable references, scripts)for Claude Code, Codex, Gemini CLI, Cursor, and 8 more coding agents — engineering, marketing, product, compliance, C-level advisory, research, business operations, commercial & finance, and your daily productivity skills. A beautiful, powerful, self-hosted rom manager and player. agent multiplexer that lives in your terminal. JavaScript in-page GUI agent. Control web interfaces with natural language. Machine Learning Systems Open-source AI penetration testing tool to find and fix your app’s vulnerabilities. A hand-picked collection of the finest of resources for the most awesome of agents, Claude Code, the undisputed champion of coding companions, from the unstoppable team at Anthropic PBC. A delectable showcase of top tier skills, ambidextrous agents, scintillating status lines, top notch developer tooling, and also we have plugins Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and...",
       "score": 23,
@@ -249,7 +249,7 @@
       "url": "https://www.producthunt.com/products/docsalot-2",
       "published": "2026-07-01T16:09:51-07:00",
       "summary": "Documentation that works for both humans and AI systems Discussion | Link",
-      "text": "Launching today DocsAlot Documentation that works for both humans and AI systems 194 followers Documentation that works for both humans and AI systems 194 followers DocsAlot turns scattered help center articles, knowledge base, and developer docs into one source of truth for humans and AI agents. It includes hosted MCP, llms.txt, and skill.md. Your docs show up in AI answers, onboarding gets faster, and agents stop reading stale context.",
+      "text": "Launching today DocsAlot Documentation that works for both humans and AI systems 196 followers Documentation that works for both humans and AI systems 196 followers DocsAlot turns scattered help center articles, knowledge base, and developer docs into one source of truth for humans and AI agents. It includes hosted MCP, llms.txt, and skill.md. Your docs show up in AI answers, onboarding gets faster, and agents stop reading stale context.",
       "score": 9,
       "stars": null,
       "forks": null
@@ -319,7 +319,7 @@
       "url": "https://www.producthunt.com/products/endl",
       "published": "2026-07-03T12:10:29-07:00",
       "summary": "A global operating account for fiat, stablecoins, and cards. Discussion | Link",
-      "text": "Endl Where businesses pay and get paid globally 382 followers Where businesses pay and get paid globally 382 followers Endl is the operating layer for global money flows. It brings together crypto and fiat accounts, payouts, FX, and reconciliation into a single platform so product teams can eliminate fragmented financial tooling, reduce manual operational work, and scale cross-border operations with greater clarity and speed. Endl Launching today Endl is the global operating account for borderless businesses. Collect payments, hold funds in fiat or stablecoins, pay contractors in 160+ countries, and spend with corporate cards. All from one account built for fast, compliant global business operations. Free Launch Team",
+      "text": "Endl Where businesses pay and get paid globally 407 followers Where businesses pay and get paid globally 407 followers Endl is the operating layer for global money flows. It brings together crypto and fiat accounts, payouts, FX, and reconciliation into a single platform so product teams can eliminate fragmented financial tooling, reduce manual operational work, and scale cross-border operations with greater clarity and speed. Endl Launching today Endl is the global operating account for borderless businesses. Collect payments, hold funds in fiat or stablecoins, pay contractors in 160+ countries, and spend with corporate cards. All from one account built for fast, compliant global business operations. Free Launch Team",
       "score": 7,
       "stars": null,
       "forks": null
@@ -333,7 +333,7 @@
       "url": "https://www.producthunt.com/products/workbuddy-2",
       "published": "2026-06-29T19:39:48-07:00",
       "summary": "Produce sharpened results faster with a team of AI experts Discussion | Link",
-      "text": "Launching today WorkBuddy Produce sharpened results faster with a team of AI experts 331 followers Produce sharpened results faster with a team of AI experts 331 followers Tencent WorkBuddy is an AI agent built for everyday office work. Make a request. Guide your AI expert team. Bring in a second opinion. Get sharpened, ready-to-use results.",
+      "text": "Launching today WorkBuddy Produce sharpened results faster with a team of AI experts 335 followers Produce sharpened results faster with a team of AI experts 335 followers Tencent WorkBuddy is an AI agent built for everyday office work. Make a request. Guide your AI expert team. Bring in a second opinion. Get sharpened, ready-to-use results.",
       "score": 7,
       "stars": null,
       "forks": null
@@ -349,20 +349,6 @@
       "summary": "Disposable test environments for AI coding agents Discussion | Link",
       "text": "Launching today TryCase Disposable test environments for AI coding agents 114 followers Disposable test environments for AI coding agents 114 followers TryCase gives AI coding agents disposable Linux environments to run apps, test changes end to end, capture screenshots and recordings, and return verified code instead of asking you to test manually.",
       "score": 7,
-      "stars": null,
-      "forks": null
-    },
-    {
-      "id": "26cbdfe4419b67f2",
-      "source": "Hacker News",
-      "category": "tech",
-      "kind": "rss",
-      "title": "Cannabis Users Face Substantially Higher Risk of Heart Attack (2025)",
-      "url": "https://www.acc.org/about-acc/press-releases/2025/03/17/15/35/cannabis-users-face-substantially-higher-risk",
-      "published": "Sun, 05 Jul 2026 11:59:27 +0000",
-      "summary": "Comments",
-      "text": "Contact: Nicole Napoli, nnapoli@acc.org, WASHINGTON (Mar 18, 2025) - Marijuana is now legal in many places, but is it safe? Two new studies add to mounting evidence that people who use cannabis are more likely to suffer a heart attack than people who do not use the drug, even among younger and otherwise healthy adults. The findings are from a retrospective study of over 4.6 million people published in JACC Advances and a meta-analysis of 12 previously published studies being presented at the American College of Cardiology's Annual Scientific Session (ACC.25). Marijuana use has risen in the United States, especially in states where it is legal to buy, sell and use the drug recreationally. In the retrospective study, researchers found that cannabis users younger than age 50 were over six times as likely to suffer a heart attack compared to non-users. The meta-analysis, which is the largest pooled study to date examining heart attacks and cannabis use, showed a 50% increased risk among those who used the drug. \"Asking about cannabis use should be part of clinicians' workup to understand patients' overall cardiovascular risk, similar to asking about smoking cigarettes,\" said Ibrahim Kamel, MD, clinical instructor at the Boston University Chobanian & Avedisian School of Medicine and internal medicine resident at St. Elizabeth Medical Center in Boston and the study's lead author. \"At a policy level, a fair warning should be made so that the people who are consuming cannabis know that there are risks.\" Kamel and his team conducted the retrospective study using data from TriNetX, a global health research network that provides access to electronic medical records. Their findings indicate that over an average follow-up of over three years, cannabis users had more than a sixfold i...",
-      "score": 6,
       "stars": null,
       "forks": null
     },
@@ -403,7 +389,7 @@
       "url": "https://www.producthunt.com/products/pennen",
       "published": "2026-07-03T14:30:43-07:00",
       "summary": "One quiet handwritten page a day. No feed, no AI. Discussion | Link",
-      "text": "Launching today Pennen One quiet handwritten page a day. No feed, no AI. 34 followers One quiet handwritten page a day. No feed, no AI. 34 followers Pennen is a calm, private, handwriting-first daily journal for iPad and Apple Pencil. One dated page per day, in real ink: past pages seal and become read-only, emoji stickers peel and press on, and the streak forgives — a one-line night still counts. Your pages live only on your iPad and in your own iCloud: no accounts, no ads, no analytics, no AI reading a word. Priced like a notebook — yearly with a 7-day free trial, or a one-time lifetime that costs less than a Moleskine.",
+      "text": "Launching today Pennen One quiet handwritten page a day. No feed, no AI. 35 followers One quiet handwritten page a day. No feed, no AI. 35 followers Pennen is a calm, private, handwriting-first daily journal for iPad and Apple Pencil. One dated page per day, in real ink: past pages seal and become read-only, emoji stickers peel and press on, and the streak forgives — a one-line night still counts. Your pages live only on your iPad and in your own iCloud: no accounts, no ads, no analytics, no AI reading a word. Priced like a notebook — yearly with a 7-day free trial, or a one-time lifetime that costs less than a Moleskine.",
       "score": 5,
       "stars": null,
       "forks": null
@@ -432,20 +418,6 @@
       "published": "Sun, 05 Jul 2026 11:54:16 +0000",
       "summary": "Comments",
       "text": "This is a free online textbook: you are welcome to access the chapter PDFs directly below. If you prefer to hold a real book, you can also purchase a hardcover or paperback below. The textbook and materials have been developed by Prof. Douglas Thain as part of the CSE 40243 compilers class at the University of Notre Dame. Join our mailing list to receive occasional announcements of new editions and other updates. A compiler translates a program written in a high level language into a program written in a lower level language. For students of computer science, building a compiler from scratch is a rite of passage: a challenging and fun project that offers insight into many different aspects of computer science, some deeply theoretical, and others highly practical. This book offers a one semester introduction into compiler construction, enabling the reader to build a simple compiler that accepts a C-like language and translates it into working X86 or ARM assembly language. It is most suitable for undergraduate students who have some experience programming in C, and have taken courses in data structures and computer architecture. The author grants permission to download, print, and use these PDFs for personal and academic use. Commercial printing or distribution is prohibited. Instead of copying PDFs locally, please point students to this page (compilerbook.org) so that they can access the latest version. Code Resources. The compilerbook-examples github repository contains additional resources that correspond to the book, including several scanners and parsers, a starter code structure for the project compiler, and sample test cases for each stage of the scanner, parser, typechecker, and code generator. Errata. Found a typo or mistake? Please send an email to the author `d...",
-      "score": 4,
-      "stars": null,
-      "forks": null
-    },
-    {
-      "id": "c77a8ea3a7206204",
-      "source": "Hacker News",
-      "category": "tech",
-      "kind": "rss",
-      "title": "Airplane Boneyards List and Map",
-      "url": "https://airplaneboneyards.com/airplane-boneyards-list-and-map.htm",
-      "published": "Sat, 04 Jul 2026 15:53:08 +0000",
-      "summary": "Comments",
-      "text": "List and Map of Active and Post-WWII Aircraft Boneyards and Storage Facilities Military Aircraft Boneyards The United States manufactured about 294,000 aircraft for WWII, and once peace was assured the military found itself with a huge surplus of aircraft. Within a year of the end of the war, about 34,000 airplanes had been moved to 30 sales-storage depots, or \"aircraft boneyards\". It was estimated a total of 117,210 aircraft would be declared surplus. If a plane was not sold at boneyards such as those at Kingman AAF, Cal-Aero Field, and Walnut Ridge AAF, it was stripped of classified information, sliced up with guillotines, and melted in smelters into ingots. ... about post-WWII boneyards Today, as Air Force, Navy and Marine planes become obsolete and need to be disposed of, or saved for future return to service, they are stored in the Arizona desert. The Air Force Materiel Command's 309th Aerospace Maintenance and Regeneration Group (AMARG) operates the world's largest boneyard at Davis-Monthan Air Force Base in Tucson, Arizona. ... about Davis-Monthan AFB's AMARG facility Airliner Boneyards, Storage and Parts Reclamation Facilities Commercial airliners have limited lifespans. Some are temporarily taken off flying status, and must be stored in a environment that is conducive to preservation. Others are kept for spare parts for flying aircraft. To protect airliners during their storage from wind and sun damage, engines and windows are tightly covered with white, reflective materials. A sealed airliner can thus be stored safely, for years, until the time comes to return it to active duty, or salvage. Eventually, all airliners are removed permanently from service and must be \"disposed\" of. Airliner \"boneyards\" in the western United States serve several functions: tempora...",
       "score": 4,
       "stars": null,
       "forks": null
@@ -493,6 +465,20 @@
       "forks": null
     },
     {
+      "id": "c77a8ea3a7206204",
+      "source": "Hacker News",
+      "category": "tech",
+      "kind": "rss",
+      "title": "Airplane Boneyards List and Map",
+      "url": "https://airplaneboneyards.com/airplane-boneyards-list-and-map.htm",
+      "published": "Sat, 04 Jul 2026 15:53:08 +0000",
+      "summary": "Comments",
+      "text": "Please wait while your request is being verified...",
+      "score": 2,
+      "stars": null,
+      "forks": null
+    },
+    {
       "id": "29ebf928652cc1ea",
       "source": "Hacker News",
       "category": "tech",
@@ -500,6 +486,20 @@
       "title": "Medieval-style fortifications are back in the Sahel",
       "url": "https://www.economist.com/middle-east-and-africa/2026/06/25/medieval-style-fortifications-are-back-in-the-sahel",
       "published": "Wed, 01 Jul 2026 13:49:59 +0000",
+      "summary": "Comments",
+      "text": "",
+      "score": 0,
+      "stars": null,
+      "forks": null
+    },
+    {
+      "id": "a640b868c4894a68",
+      "source": "Hacker News",
+      "category": "tech",
+      "kind": "rss",
+      "title": "Show HN: KiCad in the Browser",
+      "url": "https://demo.pcbjam.com/",
+      "published": "Sun, 05 Jul 2026 12:06:57 +0000",
       "summary": "Comments",
       "text": "",
       "score": 0,
