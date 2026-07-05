@@ -39,14 +39,15 @@ jobs:
         run: python scripts/collect.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit generated outputs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update daily news radar"
+          file_pattern: "outputs/*.md site/data/news.json"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
       - id: deployment
         uses: actions/deploy-pages@v4
-      - name: Commit generated outputs
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update daily news radar"
-          file_pattern: "outputs/*.md site/data/news.json"
+        continue-on-error: true
