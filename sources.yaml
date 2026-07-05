@@ -1,0 +1,58 @@
+# 每日内容来源配置
+# type 支持：rss / page
+# 第一版先以 RSS 为主，稳定、干净、适合每日阅读。
+
+sources:
+  - name: Hacker News
+    type: rss
+    url: https://news.ycombinator.com/rss
+    category: tech
+    limit: 8
+
+  - name: GitHub Blog
+    type: rss
+    url: https://github.blog/feed/
+    category: dev
+    limit: 5
+
+  - name: OpenAI Blog
+    type: rss
+    url: https://openai.com/news/rss.xml
+    category: ai
+    limit: 5
+
+  - name: Anthropic News
+    type: rss
+    url: https://www.anthropic.com/news/rss.xml
+    category: ai
+    limit: 5
+
+  - name: Google DeepMind Blog
+    type: rss
+    url: https://deepmind.google/discover/blog/rss.xml
+    category: ai
+    limit: 5
+
+  - name: The Batch
+    type: rss
+    url: https://www.deeplearning.ai/the-batch/feed/
+    category: ai
+    limit: 5
+
+  - name: Product Hunt Daily
+    type: rss
+    url: https://www.producthunt.com/feed
+    category: product
+    limit: 8
+
+  - name: Simon Willison
+    type: rss
+    url: https://simonwillison.net/atom/everything/
+    category: ai-dev
+    limit: 5
+
+  - name: Daily JS
+    type: rss
+    url: https://dailyjs.com/rss.xml
+    category: dev
+    limit: 5
