@@ -1,0 +1,21 @@
+{
+  "query": "Scrapling 网页抓取",
+  "generated_at": "2026-07-05T23:36:00.853759+08:00",
+  "items": [
+    {
+      "id": "df11630e65be505c",
+      "source": "Scrapling",
+      "category": "crawler",
+      "kind": "github",
+      "title": "D4Vinci/Scrapling: 🕷️ An adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl!",
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "published": "2026-07-04T19:26:32Z",
+      "summary": "面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。",
+      "text": "العربيه | Español | Português (Brasil) | Français | Deutsch | 简体中文 | 日本語 | Русский | 한국어 Selection methods · Fetchers · Spiders · Proxy Rotation · CLI · MCP Scrapling is an adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl. Its parser learns from website changes and automatically relocates your elements when pages update. Its fetchers bypass anti-bot systems like Cloudflare Turnstile out of the box. And its spider framework lets you scale up to concurrent, multi-session crawls with pause/resume and automatic proxy rotation - all in a few lines of Python. One library, zero compromises. Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers for Web Scrapers and regular users, there's something for everyone. from scrapling.fetchers import Fetcher, AsyncFetcher, StealthyFetcher, DynamicFetcher StealthyFetcher.adaptive = True p = StealthyFetcher.fetch('https://example.com', headless=True, network_idle=True) # Fetch website under the radar! products = p.css('.product', auto_save=True) # Scrape data that survives website design changes! products = p.css('.product', adaptive=True) # Later, if the website structure changes, pass `adaptive=True` to find them! Or scale up to full crawls from scrapling.spiders import Spider, Response class MySpider(Spider): name = \"demo\" start_urls = [\"https://example.com/\"] async def parse(self, response: Response): for item in response.css('.product'): yield {\"title\": item.css('h2::text').get()} MySpider().start() Do you want to show your ad here? Click here Do you want to show your ad here? Click here and choose the tier that suits you! - 🕷️ Scrapy-like Spider API: Define spiders with start_urls , asyncparse callbacks, andRequest /Response objects. - ⚡ Concurrent Crawling:...",
+      "score": 37,
+      "stars": 68171,
+      "forks": 6749,
+      "report_score": 57
+    }
+  ]
+}
