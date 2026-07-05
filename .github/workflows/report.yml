@@ -1,0 +1,45 @@
+name: Generate Topic Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "报告主题，例如 AI Agent / 网页抓取 / GitHub 热门项目"
+        required: true
+        default: "AI Agent"
+      max_items:
+        description: "最多输出多少条"
+        required: true
+        default: "12"
+      depth:
+        description: "brief / standard / deep"
+        required: true
+        default: "standard"
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Generate report
+        run: |
+          python scripts/report.py \
+            --query "${{ inputs.query }}" \
+            --max-items "${{ inputs.max_items }}" \
+            --depth "${{ inputs.depth }}" \
+            --print
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit report
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Generate topic report"
+          file_pattern: "reports/*.md reports/*.json"

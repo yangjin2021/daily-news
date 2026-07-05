@@ -22,14 +22,44 @@ site/data/news.json          # 给网页读取
 site/index.html              # 信息收集站
 ```
 
+## 一键报告
+
+在 GPT / Codex 里直接调用这个仓库时，运行：
+
+```bash
+python scripts/report.py --query "AI Agent" --max-items 12 --depth standard --print
+```
+
+它会实时采集 `sources.yaml` 里的 RSS、GitHub 仓库和网页入口，然后输出一份 Markdown 报告：
+
+```text
+reports/YYYY-MM-DD-ai-agent.md
+reports/latest-report.json
+```
+
+Windows 本地也可以一键运行：
+
+```powershell
+.\run-report.ps1 -Query "网页抓取和 Agent 调研入口" -Depth deep
+```
+
+只想基于已有缓存快速出报告：
+
+```bash
+python scripts/report.py --query "Scrapling" --from-cache --print
+```
+
 ## 目录
 
 ```text
 sources.yaml                 # 内容来源：RSS / 网站 / GitHub / 博客
 scripts/collect.py           # 采集与清洗脚本
 outputs/                     # 每日生成的 Markdown 简报原料
+reports/                     # 按主题生成的一键报告
 site/                        # GitHub Pages 信息面板
 .github/workflows/daily.yml  # GitHub Actions 自动运行
+.github/workflows/report.yml # 手动输入主题生成报告
+AGENTS.md                    # 告诉 GPT/Codex 如何调用本仓库
 requirements.txt             # Python 依赖
 ```
 
