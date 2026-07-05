@@ -1,35 +1,52 @@
-name: Daily News Collector
+name: Daily News Radar
 
 on:
-  workflow_dispatch:
   schedule:
-    # 23:30 UTC = 07:30 Beijing time
     - cron: "30 23 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "sources.yaml"
+      - "scripts/**"
+      - "site/**"
+      - ".github/workflows/daily.yml"
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily-news-radar
+  cancel-in-progress: false
 
 jobs:
-  collect:
+  update:
     runs-on: ubuntu-latest
-
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
+          python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Collect daily content
+      - name: Collect daily news
         run: python scripts/collect.py
-
-      - name: Commit daily output
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Commit generated outputs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Add daily news output"
-          file_pattern: outputs/*.md
+          commit_message: "Update daily news radar"
+          file_pattern: "outputs/*.md site/data/news.json"

@@ -1,8 +1,52 @@
 # 每日内容来源配置
-# type 支持：rss / page
-# 第一版先以 RSS 为主，稳定、干净、适合每日阅读。
+# type 支持：rss / github / page
+# 目标：把 Agent-Reach 的调研入口、AI News Radar 的筛选、Scrapling 的页面抽取整合成信息收集站。
+
+site:
+  title: Daily News Radar
+  description: 调研入口聚合 + AI 新闻雷达 + 网页内容抽取
+  timezone: Asia/Shanghai
+
+ranking:
+  keywords:
+    - AI
+    - agent
+    - LLM
+    - model
+    - OpenAI
+    - Anthropic
+    - Google
+    - GitHub
+    - crawler
+    - scraping
+    - research
+    - RAG
 
 sources:
+  - name: Agent-Reach
+    type: github
+    url: https://github.com/Panniantong/Agent-Reach
+    repo: Panniantong/Agent-Reach
+    category: research-entry
+    limit: 1
+    note: Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。
+
+  - name: AI News Radar
+    type: github
+    url: https://github.com/AIkdb/ai-news-radar
+    repo: AIkdb/ai-news-radar
+    category: ai-radar
+    limit: 1
+    note: 24 小时 AI 更新雷达，按信息源筛选、去重、分类并生成可读视图。
+
+  - name: Scrapling
+    type: github
+    url: https://github.com/D4Vinci/Scrapling
+    repo: D4Vinci/Scrapling
+    category: crawler
+    limit: 1
+    note: 面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。
+
   - name: Hacker News
     type: rss
     url: https://news.ycombinator.com/rss
@@ -56,3 +100,17 @@ sources:
     url: https://dailyjs.com/rss.xml
     category: dev
     limit: 5
+
+  - name: GitHub Trending Python
+    type: page
+    url: https://github.com/trending/python?since=daily
+    category: github-trending
+    limit: 1
+    note: 每日 Python 趋势仓库入口，用来发现可接入工作流的新工具。
+
+  - name: GitHub Trending
+    type: page
+    url: https://github.com/trending?since=daily
+    category: github-trending
+    limit: 1
+    note: 每日 GitHub 趋势入口，先看能不能接入工作流，再看星标热度。
