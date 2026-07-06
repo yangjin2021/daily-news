@@ -11,6 +11,7 @@ on:
       - "sources.yaml"
       - "scripts/**"
       - "site/**"
+      - "AGENTS.md"
       - ".github/workflows/daily.yml"
 
 permissions:
@@ -43,7 +44,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update daily news radar"
-          file_pattern: "outputs/*.md site/data/news.json"
+          file_pattern: "outputs/*.md site/data/news.json site/data/source_health.json reports/source-health.md"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
