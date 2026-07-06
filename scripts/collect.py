@@ -5,7 +5,7 @@ import html
 import json
 import os
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from time import perf_counter
@@ -19,13 +19,16 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES_FILE = ROOT / "sources.yaml"
+TOPICS_FILE = ROOT / "topics.yaml"
 OUTPUT_DIR = ROOT / "outputs"
 REPORT_DIR = ROOT / "reports"
 SITE_DIR = ROOT / "site"
 SITE_DATA_DIR = SITE_DIR / "data"
 DEFAULT_KEYWORDS = ["AI", "agent", "LLM", "model", "GitHub", "crawler", "research"]
-USER_AGENT = "daily-news-radar/1.1 (+https://github.com/yangjin2021/daily-news)"
+USER_AGENT = "daily-news-radar/1.2 (+https://github.com/yangjin2021/daily-news)"
 ENABLE_SCRAPLING_FALLBACK = os.getenv("ENABLE_SCRAPLING_FALLBACK", "").lower() in {"1", "true", "yes"}
+SKIP_SOURCE_STATES = {"disabled", "remove"}
+DEGRADE_SCORE_PENALTY = 4
 
 
 @dataclass
@@ -47,7 +50,10 @@ class Item:
     fetch_error: str = ""
     observed: bool = False
     source_priority: str = ""
+    source_state: str = "observe"
     watch_reason: str = ""
+    topic_tags: list[str] = field(default_factory=list)
+    matched_topics: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -58,6 +64,8 @@ class SourceHealth:
     url: str
     observed: bool
     priority: str
+    source_state: str
+    topic_tags: list[str]
     status: str
     item_count: int
     error: str
@@ -176,6 +184,14 @@ def load_sources() -> dict[str, Any]:
     return data
 
 
+def load_topics() -> list[dict[str, Any]]:
+    if not TOPICS_FILE.exists():
+        return []
+    with TOPICS_FILE.open("r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    return list(data.get("topics", []))
+
+
 def rank_item(title: str, summary: str, text: str, category: str, keywords: list[str]) -> int:
     haystack = f"{title} {summary} {text} {category}".lower()
     score = 0
@@ -189,15 +205,56 @@ def rank_item(title: str, summary: str, text: str, category: str, keywords: list
     return score
 
 
+def match_topics(title: str, summary: str, text: str, category: str, topics: list[dict[str, Any]]) -> list[str]:
+    haystack = f"{title} {summary} {text} {category}".lower()
+    matched: list[str] = []
+    for topic in topics:
+        topic_name = str(topic.get("name", ""))
+        categories = {str(value).lower() for value in topic.get("categories", [])}
+        keywords = [str(value).lower() for value in topic.get("keywords", [])]
+        if category.lower() in categories or any(keyword and keyword in haystack for keyword in keywords):
+            matched.append(topic_name)
+    return matched
+
+
+def topic_score_boost(matched_topics: list[str], topics: list[dict[str, Any]]) -> int:
+    if not matched_topics:
+        return 0
+    priorities = {str(topic.get("name", "")): str(topic.get("priority", "P2")) for topic in topics}
+    boost = 0
+    for topic_name in matched_topics[:4]:
+        priority = priorities.get(topic_name, "P2")
+        if priority == "P0":
+            boost += 4
+        elif priority == "P1":
+            boost += 2
+        else:
+            boost += 1
+    return boost
+
+
 def source_meta(source: dict[str, Any]) -> dict[str, Any]:
     return {
         "observed": bool(source.get("observe", False)),
         "source_priority": str(source.get("priority", "")),
+        "source_state": str(source.get("source_state", "observe")),
         "watch_reason": str(source.get("watch_reason", "")),
+        "topic_tags": [str(value) for value in source.get("topic_tags", [])],
     }
 
 
-def collect_rss(source: dict[str, Any], keywords: list[str]) -> list[Item]:
+def finalize_item(item: Item, source: dict[str, Any], topics: list[dict[str, Any]]) -> Item:
+    if not item.matched_topics:
+        item.matched_topics = sorted(set(item.topic_tags + match_topics(item.title, item.summary, item.text, item.category, topics)))
+    item.score += topic_score_boost(item.matched_topics, topics)
+    if item.source_state == "keep":
+        item.score += 2
+    elif item.source_state == "degrade":
+        item.score = max(0, item.score - DEGRADE_SCORE_PENALTY)
+    return item
+
+
+def collect_rss(source: dict[str, Any], keywords: list[str], topics: list[dict[str, Any]]) -> list[Item]:
     parsed = feedparser.parse(source["url"])
     limit = int(source.get("limit", 10))
     items: list[Item] = []
@@ -212,28 +269,27 @@ def collect_rss(source: dict[str, Any], keywords: list[str]) -> list[Item]:
         )
         summary = clean_text(entry.get("summary") or entry.get("description") or "")
         text, fetcher, fetch_error = extract_page_text(url)
-        items.append(
-            Item(
-                id=make_id(url, title),
-                source=source.get("name", "Unknown"),
-                category=source.get("category", "general"),
-                kind="rss",
-                title=title,
-                url=url,
-                published=published,
-                summary=summary,
-                text=text,
-                score=rank_item(title, summary, text, source.get("category", "general"), keywords),
-                fetched_at=local_now().isoformat(),
-                fetcher=fetcher,
-                fetch_error=fetch_error,
-                **meta,
-            )
+        item = Item(
+            id=make_id(url, title),
+            source=source.get("name", "Unknown"),
+            category=source.get("category", "general"),
+            kind="rss",
+            title=title,
+            url=url,
+            published=published,
+            summary=summary,
+            text=text,
+            score=rank_item(title, summary, text, source.get("category", "general"), keywords),
+            fetched_at=local_now().isoformat(),
+            fetcher=fetcher,
+            fetch_error=fetch_error,
+            **meta,
         )
+        items.append(finalize_item(item, source, topics))
     return items
 
 
-def collect_github(source: dict[str, Any], keywords: list[str]) -> list[Item]:
+def collect_github(source: dict[str, Any], keywords: list[str], topics: list[dict[str, Any]]) -> list[Item]:
     repo = source.get("repo") or github_repo_from_url(source.get("url", ""))
     if not repo:
         return []
@@ -264,26 +320,25 @@ def collect_github(source: dict[str, Any], keywords: list[str]) -> list[Item]:
     if stars:
         score += min(stars // 1000, 25)
 
-    return [
-        Item(
-            id=make_id(source.get("url", ""), title),
-            source=source.get("name", repo),
-            category=source.get("category", "github"),
-            kind="github",
-            title=title,
-            url=source.get("url") or data.get("html_url", ""),
-            published=published,
-            summary=summary,
-            text=text,
-            score=score,
-            stars=stars,
-            forks=forks,
-            fetched_at=local_now().isoformat(),
-            fetcher=fetcher,
-            fetch_error=fetch_error,
-            **meta,
-        )
-    ]
+    item = Item(
+        id=make_id(source.get("url", ""), title),
+        source=source.get("name", repo),
+        category=source.get("category", "github"),
+        kind="github",
+        title=title,
+        url=source.get("url") or data.get("html_url", ""),
+        published=published,
+        summary=summary,
+        text=text,
+        score=score,
+        stars=stars,
+        forks=forks,
+        fetched_at=local_now().isoformat(),
+        fetcher=fetcher,
+        fetch_error=fetch_error,
+        **meta,
+    )
+    return [finalize_item(item, source, topics)]
 
 
 def github_repo_from_url(url: str) -> str:
@@ -291,46 +346,67 @@ def github_repo_from_url(url: str) -> str:
     return match.group(1).removesuffix(".git") if match else ""
 
 
-def collect_page(source: dict[str, Any], keywords: list[str]) -> list[Item]:
+def collect_page(source: dict[str, Any], keywords: list[str], topics: list[dict[str, Any]]) -> list[Item]:
     title = source.get("name", source.get("url", "Page"))
     url = source.get("url", "")
     summary = clean_text(source.get("note") or "页面入口，适合后续用 Scrapling / Playwright 做深度抽取。")
     text, fetcher, fetch_error = extract_page_text(url)
-    return [
-        Item(
-            id=make_id(url, title),
-            source=source.get("name", "Page"),
-            category=source.get("category", "page"),
-            kind="page",
-            title=title,
-            url=url,
-            published=utc_now().isoformat(),
-            summary=summary,
-            text=text,
-            score=rank_item(title, summary, text, source.get("category", "page"), keywords),
-            fetched_at=local_now().isoformat(),
-            fetcher=fetcher,
-            fetch_error=fetch_error,
-            **source_meta(source),
-        )
-    ]
+    item = Item(
+        id=make_id(url, title),
+        source=source.get("name", "Page"),
+        category=source.get("category", "page"),
+        kind="page",
+        title=title,
+        url=url,
+        published=utc_now().isoformat(),
+        summary=summary,
+        text=text,
+        score=rank_item(title, summary, text, source.get("category", "page"), keywords),
+        fetched_at=local_now().isoformat(),
+        fetcher=fetcher,
+        fetch_error=fetch_error,
+        **source_meta(source),
+    )
+    return [finalize_item(item, source, topics)]
 
 
-def collect_source(source: dict[str, Any], keywords: list[str]) -> tuple[list[Item], SourceHealth]:
+def collect_source(source: dict[str, Any], keywords: list[str], topics: list[dict[str, Any]]) -> tuple[list[Item], SourceHealth]:
     source_type = source.get("type", "rss")
+    source_state = str(source.get("source_state", "observe"))
     started = local_now()
     start_perf = perf_counter()
     status = "ok"
     error = ""
     items: list[Item] = []
 
+    if source_state in SKIP_SOURCE_STATES:
+        finished = local_now()
+        return [], SourceHealth(
+            name=source.get("name", "Unknown"),
+            type=source_type,
+            category=source.get("category", "general"),
+            url=source.get("url", ""),
+            observed=bool(source.get("observe", False)),
+            priority=str(source.get("priority", "")),
+            source_state=source_state,
+            topic_tags=[str(value) for value in source.get("topic_tags", [])],
+            status="skipped",
+            item_count=0,
+            error=f"source_state is {source_state}",
+            started_at=started.isoformat(),
+            finished_at=finished.isoformat(),
+            duration_seconds=round(perf_counter() - start_perf, 3),
+            max_score=0,
+            average_score=0.0,
+        )
+
     try:
         if source_type == "rss":
-            items = collect_rss(source, keywords)
+            items = collect_rss(source, keywords, topics)
         elif source_type == "github":
-            items = collect_github(source, keywords)
+            items = collect_github(source, keywords, topics)
         elif source_type == "page":
-            items = collect_page(source, keywords)
+            items = collect_page(source, keywords, topics)
         else:
             status = "skipped"
             error = f"unsupported source type: {source_type}"
@@ -357,6 +433,8 @@ def collect_source(source: dict[str, Any], keywords: list[str]) -> tuple[list[It
         url=source.get("url", ""),
         observed=bool(source.get("observe", False)),
         priority=str(source.get("priority", "")),
+        source_state=source_state,
+        topic_tags=[str(value) for value in source.get("topic_tags", [])],
         status=status,
         item_count=len(items),
         error=clean_text(error, max_chars=500),
@@ -371,11 +449,14 @@ def collect_source(source: dict[str, Any], keywords: list[str]) -> tuple[list[It
 
 def collect_with_health() -> tuple[list[Item], list[SourceHealth]]:
     config = load_sources()
+    topics = load_topics()
     keywords = list(config.get("ranking", {}).get("keywords", DEFAULT_KEYWORDS))
+    topic_keywords = [keyword for topic in topics for keyword in topic.get("keywords", [])]
+    keywords = list(dict.fromkeys([*keywords, *topic_keywords]))
     results: list[Item] = []
     health: list[SourceHealth] = []
     for source in config.get("sources", []):
-        source_items, source_health = collect_source(source, keywords)
+        source_items, source_health = collect_source(source, keywords, topics)
         results.extend(source_items)
         health.append(source_health)
     return dedupe(results), health
@@ -426,12 +507,17 @@ def render_markdown(items: list[Item]) -> str:
             lines.append(f"- Source: {item.source}")
             lines.append(f"- Type: {item.kind}")
             lines.append(f"- Score: {item.score}")
+            lines.append(f"- Source state: {item.source_state}")
             lines.append(f"- Published: {item.published or 'Unknown'}")
             lines.append(f"- URL: {item.url}")
             if item.fetcher:
                 lines.append(f"- Fetcher: {item.fetcher}")
             if item.source_priority:
                 lines.append(f"- Priority: {item.source_priority}")
+            if item.topic_tags:
+                lines.append(f"- Topic tags: {', '.join(item.topic_tags)}")
+            if item.matched_topics:
+                lines.append(f"- Matched topics: {', '.join(item.matched_topics)}")
             if item.watch_reason:
                 lines.append(f"- Watch reason: {item.watch_reason}")
             if item.fetch_error:
@@ -463,6 +549,8 @@ def write_site_data(items: list[Item], health: list[SourceHealth] | None = None)
         "items": [item_to_dict(item) for item in items],
         "categories": counts(items, "category"),
         "sources": counts(items, "source"),
+        "topics": count_item_topics(items),
+        "source_states": counts(items, "source_state"),
         "source_health": [asdict(row) for row in health or []],
     }
     (SITE_DATA_DIR / "news.json").write_text(
@@ -478,6 +566,7 @@ def write_source_health(health: list[SourceHealth]) -> None:
         "generated_at": local_now().isoformat(),
         "sources": [asdict(row) for row in health],
         "summary": counts_health(health),
+        "states": count_health_states(health),
     }
     (SITE_DATA_DIR / "source_health.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
@@ -493,19 +582,19 @@ def render_source_health_markdown(health: list[SourceHealth]) -> str:
         "",
         f"Generated at: {now.isoformat()}",
         "",
-        "| Source | Type | Status | Items | Max score | Avg score | Duration | Priority |",
-        "|---|---|---:|---:|---:|---:|---:|---|",
+        "| Source | Type | State | Status | Items | Max score | Avg score | Duration | Priority | Topics |",
+        "|---|---|---|---:|---:|---:|---:|---:|---|---|",
     ]
     for row in health:
         lines.append(
-            f"| {row.name} | {row.type} | {row.status} | {row.item_count} | {row.max_score} | "
-            f"{row.average_score} | {row.duration_seconds}s | {row.priority or '-'} |"
+            f"| {row.name} | {row.type} | {row.source_state} | {row.status} | {row.item_count} | {row.max_score} | "
+            f"{row.average_score} | {row.duration_seconds}s | {row.priority or '-'} | {', '.join(row.topic_tags) or '-'} |"
         )
-    failed = [row for row in health if row.status in {"error", "partial", "empty"}]
+    failed = [row for row in health if row.status in {"error", "partial", "empty", "skipped"}]
     if failed:
         lines.extend(["", "## Warnings", ""])
         for row in failed:
-            lines.append(f"- **{row.name}**: {row.status} - {row.error or 'no items returned'}")
+            lines.append(f"- **{row.name}**: {row.status} / {row.source_state} - {row.error or 'no items returned'}")
     return "\n".join(lines)
 
 
@@ -517,10 +606,25 @@ def counts(items: list[Item], field: str) -> dict[str, int]:
     return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
 
 
+def count_item_topics(items: list[Item]) -> dict[str, int]:
+    result: dict[str, int] = {}
+    for item in items:
+        for topic in item.matched_topics or item.topic_tags:
+            result[topic] = result.get(topic, 0) + 1
+    return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
+
+
 def counts_health(health: list[SourceHealth]) -> dict[str, int]:
     result: dict[str, int] = {}
     for row in health:
         result[row.status] = result.get(row.status, 0) + 1
+    return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
+
+
+def count_health_states(health: list[SourceHealth]) -> dict[str, int]:
+    result: dict[str, int] = {}
+    for row in health:
+        result[row.source_state] = result.get(row.source_state, 0) + 1
     return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
 
 
