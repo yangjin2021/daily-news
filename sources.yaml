@@ -21,6 +21,10 @@ ranking:
     - scraping
     - research
     - RAG
+    - radar
+    - discovery
+    - fetcher
+    - workflow
 
 sources:
   - name: Agent-Reach
@@ -29,6 +33,10 @@ sources:
     repo: Panniantong/Agent-Reach
     category: research-entry
     limit: 1
+    observe: true
+    priority: P0
+    cadence: daily
+    watch_reason: Agent 上网与调研入口聚合，决定信息系统能接触哪些网页、社区、仓库和趋势入口。
     note: Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。
 
   - name: AI News Radar
@@ -37,6 +45,10 @@ sources:
     repo: AIkdb/ai-news-radar
     category: ai-radar
     limit: 1
+    observe: true
+    priority: P0
+    cadence: daily
+    watch_reason: 长期观察信源筛选、去重、打分、AI 强相关过滤和静态信息站 pipeline。
     note: 24 小时 AI 更新雷达，按信息源筛选、去重、分类并生成可读视图。
 
   - name: Scrapling
@@ -45,6 +57,10 @@ sources:
     repo: D4Vinci/Scrapling
     category: crawler
     limit: 1
+    observe: true
+    priority: P0
+    cadence: daily
+    watch_reason: 长期观察现代网页抓取、自适应选择器、动态页面、Spider 和反爬 fallback 能力。
     note: 面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。
 
   - name: Hacker News
@@ -106,6 +122,10 @@ sources:
     url: https://github.com/trending/python?since=daily
     category: github-trending
     limit: 1
+    observe: true
+    priority: P1
+    cadence: daily
+    watch_reason: 每日趋势入口，适合发现新的工具、库和可接入工作流的项目。
     note: 每日 Python 趋势仓库入口，用来发现可接入工作流的新工具。
 
   - name: GitHub Trending
@@ -113,4 +133,8 @@ sources:
     url: https://github.com/trending?since=daily
     category: github-trending
     limit: 1
+    observe: true
+    priority: P1
+    cadence: daily
+    watch_reason: 每日 GitHub 趋势入口，先判断能否接入工作流，再看星标热度。
     note: 每日 GitHub 趋势入口，先看能不能接入工作流，再看星标热度。
