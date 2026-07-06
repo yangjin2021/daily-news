@@ -1,7 +1,8 @@
 # 每日内容来源配置
-# type 支持：rss / github / page / agent_reach
+# type 支持：rss / github / page
 # source_state 支持：keep / observe / degrade / remove / disabled
 # 目标：把 Agent-Reach 的调研入口、AI News Radar 的筛选、Scrapling 的页面抽取整合成信息收集站。
+# Agent-Reach 可执行探测配置在 agent_reach.yaml，由 scripts/collect_with_agent_reach.py 追加进 outputs。
 
 site:
   title: Daily News Radar
@@ -47,22 +48,6 @@ sources:
       - 网页抓取与信息入口
     watch_reason: Agent 上网与调研入口聚合，决定信息系统能接触哪些网页、社区、仓库和趋势入口。
     note: Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。
-
-  - name: Agent-Reach Probe
-    type: agent_reach
-    url: agent_reach.yaml
-    category: research-entry
-    limit: 12
-    observe: true
-    source_state: keep
-    priority: P0
-    cadence: daily
-    topic_tags:
-      - Agent 工具生态
-      - 网页抓取与信息入口
-      - AI 产品与工作流
-    watch_reason: 可执行调研入口；把选题交给 Agent-Reach 去公开平台、视频、社区和网页找信息，再沉淀进 daily-news。
-    note: 默认生成执行计划；设置 ENABLE_AGENT_REACH=1 且安装 Agent-Reach 后会运行真实探测。
 
   - name: AI News Radar
     type: github
