@@ -1,0 +1,146 @@
+{
+  "generated_at": "2026-07-06T21:00:43.227067+08:00",
+  "enabled": false,
+  "cli_path": "",
+  "status": "dry_run",
+  "status_counts": {
+    "dry_run": 8,
+    "skipped_login_required": 5
+  },
+  "results": [],
+  "tasks": [
+    {
+      "name": "Agent 工具生态",
+      "query": "AI Agent 工具生态 Claude Code Codex MCP skill workflow",
+      "priority": "P0",
+      "topic_tags": [
+        "Agent 工具生态",
+        "AI 编程与工具调用稳定性"
+      ],
+      "reason": "发现 Agent 工具、skill、MCP、工作流和可接入 daily-news 的项目。",
+      "statuses": [
+        {
+          "platform": "github",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query AI Agent 工具生态 Claude Code Codex MCP skill workflow --platform github --limit 6",
+          "results": []
+        },
+        {
+          "platform": "youtube",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query AI Agent 工具生态 Claude Code Codex MCP skill workflow --platform youtube --limit 6",
+          "results": []
+        },
+        {
+          "platform": "reddit",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query AI Agent 工具生态 Claude Code Codex MCP skill workflow --platform reddit --limit 6",
+          "results": []
+        },
+        {
+          "platform": "web",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query AI Agent 工具生态 Claude Code Codex MCP skill workflow --platform web --limit 6",
+          "results": []
+        }
+      ]
+    },
+    {
+      "name": "网页抓取与信息入口",
+      "query": "Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page",
+      "priority": "P0",
+      "topic_tags": [
+        "网页抓取与信息入口"
+      ],
+      "reason": "发现新的抓取器、浏览器代理、动态网页读取和反爬 fallback 方案。",
+      "statuses": [
+        {
+          "platform": "github",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page --platform github --limit 6",
+          "results": []
+        },
+        {
+          "platform": "youtube",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page --platform youtube --limit 6",
+          "results": []
+        },
+        {
+          "platform": "reddit",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page --platform reddit --limit 6",
+          "results": []
+        },
+        {
+          "platform": "web",
+          "status": "dry_run",
+          "message": "ENABLE_AGENT_REACH is not enabled; generated execution plan only.",
+          "command_preview": "agent-reach search --query Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page --platform web --limit 6",
+          "results": []
+        }
+      ]
+    },
+    {
+      "name": "小红书内容工作流观察",
+      "query": "AI 自动刷小红书 内容选题 信息收集 Agent",
+      "priority": "P1",
+      "topic_tags": [
+        "Agent 工具生态",
+        "AI 产品与工作流"
+      ],
+      "reason": "只做能力观察；涉及登录态时应本地执行，不在 CI 默认开启。",
+      "statuses": [
+        {
+          "platform": "xiaohongshu",
+          "status": "skipped_login_required",
+          "message": "Login-sensitive platform skipped. Run locally with AGENT_REACH_ALLOW_LOGIN=1 if appropriate.",
+          "results": []
+        },
+        {
+          "platform": "web",
+          "status": "skipped_login_required",
+          "message": "Login-sensitive platform skipped. Run locally with AGENT_REACH_ALLOW_LOGIN=1 if appropriate.",
+          "results": []
+        }
+      ]
+    },
+    {
+      "name": "B站与视频理解入口",
+      "query": "AI Agent B站 YouTube 视频总结 字幕 提取 信息收集",
+      "priority": "P1",
+      "topic_tags": [
+        "Agent 工具生态",
+        "网页抓取与信息入口"
+      ],
+      "reason": "观察 Agent 读取视频、字幕、教程和多平台内容的能力。",
+      "statuses": [
+        {
+          "platform": "bilibili",
+          "status": "skipped_login_required",
+          "message": "Login-sensitive platform skipped. Run locally with AGENT_REACH_ALLOW_LOGIN=1 if appropriate.",
+          "results": []
+        },
+        {
+          "platform": "youtube",
+          "status": "skipped_login_required",
+          "message": "Login-sensitive platform skipped. Run locally with AGENT_REACH_ALLOW_LOGIN=1 if appropriate.",
+          "results": []
+        },
+        {
+          "platform": "web",
+          "status": "skipped_login_required",
+          "message": "Login-sensitive platform skipped. Run locally with AGENT_REACH_ALLOW_LOGIN=1 if appropriate.",
+          "results": []
+        }
+      ]
+    }
+  ]
+}
