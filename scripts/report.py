@@ -4,7 +4,6 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -29,7 +28,8 @@ def load_cached_items() -> list[Item]:
     items: list[Item] = []
     for raw in payload.get("items", []):
         allowed = {field.name for field in Item.__dataclass_fields__.values()}
-        items.append(Item(**{key: raw.get(key) for key in allowed}))
+        data = {key: raw.get(key) for key in allowed if key in raw}
+        items.append(Item(**data))
     return items
 
 
@@ -38,13 +38,17 @@ def split_terms(query: str) -> list[str]:
     return [term.lower() for term in terms if len(term.strip()) >= 2]
 
 
+def safe_lower(value: str | None) -> str:
+    return (value or "").lower()
+
+
 def match_score(item: Item, terms: list[str]) -> int:
     if not terms:
         return item.score
 
-    title = item.title.lower()
-    summary = item.summary.lower()
-    text = item.text.lower()
+    title = safe_lower(item.title)
+    summary = safe_lower(item.summary)
+    text = safe_lower(item.text)
     meta = f"{item.source} {item.category} {item.kind}".lower()
     score = 0
     for term in terms:
@@ -89,6 +93,45 @@ def reason_for(item: Item, query: str) -> str:
     return "RSS / 页面内容信号较强，适合纳入今日阅读"
 
 
+def why_it_matters(item: Item, query: str = "") -> str:
+    category = safe_lower(item.category)
+    title = safe_lower(item.title)
+    summary = safe_lower(item.summary)
+    text = safe_lower(item.text)
+    haystack = f"{title} {summary} {text}"
+
+    if item.watch_reason:
+        return item.watch_reason
+    if category == "research-entry" or "agent-reach" in title:
+        return "它代表调研入口层：决定 Agent 能接触哪些网页、社区、仓库、视频和趋势源。"
+    if category == "ai-radar" or "news radar" in title:
+        return "它代表筛选层：把信息源判断、去重、AI 强相关过滤、源健康和静态发布串成 pipeline。"
+    if category == "crawler" or "scrapling" in title:
+        return "它代表抓取层：补足 RSS 覆盖不到的网页，并为动态页面、反爬和深度抽取提供 fallback。"
+    if category == "github-trending":
+        return "它是发现层入口：可以帮助系统从每日趋势里发现新的工具、项目和可接入工作流。"
+    if "benchmark" in haystack or "eval" in haystack:
+        return "它说明 AI 正在从能力展示进入可验证、可复盘、可比较的评估阶段。"
+    if "tool" in haystack or "schema" in haystack or "agent" in haystack:
+        return "它影响 GPT / Agent 工具调用稳定性，关系到这个仓库能不能被可靠地自动调用。"
+    if item.kind == "github" and item.stars:
+        return f"它是可追踪的 GitHub 项目信号，当前约 {item.stars} stars，可继续观察增长和接入价值。"
+    if query.strip():
+        return f"它与“{query.strip()}”相关，可作为主题报告里的证据或后续深挖入口。"
+    return "它是今日信息流中的有效信号，可用于日报摘要、选题判断或后续追踪。"
+
+
+def next_action_for(item: Item) -> str:
+    category = safe_lower(item.category)
+    if category in {"research-entry", "ai-radar", "crawler", "github-trending"}:
+        return "评估是否接入 daily-news 工作流，并观察 7 天信号质量。"
+    if item.kind == "github":
+        return "查看 README、release、issues，判断是否值得长期观察。"
+    if item.kind == "page":
+        return "用网页抽取或 Scrapling fallback 做二次抓取。"
+    return "纳入今日摘要；若连续出现，再升级为长期观察源。"
+
+
 def clipped(value: str, depth: str) -> str:
     limits = {"brief": 260, "standard": 520, "deep": 1100}
     return clean_text(value, max_chars=limits.get(depth, 520))
@@ -117,6 +160,8 @@ def render_report(query: str, ranked: list[tuple[Item, int]], total: int, depth:
         lines.append(f"{idx}. [{item.title}]({item.url})")
         lines.append(f"   - 来源：{item.source} / {item.category} / {item.kind}")
         lines.append(f"   - 推荐理由：{reason_for(item, query)}")
+        lines.append(f"   - 为什么重要：{why_it_matters(item, query)}")
+        lines.append(f"   - 下一步：{next_action_for(item)}")
         lines.append(f"   - 报告分：{score}")
     lines.append("")
 
@@ -133,6 +178,12 @@ def render_report(query: str, ranked: list[tuple[Item, int]], total: int, depth:
             lines.append(f"- 来源：{item.source}")
             lines.append(f"- 类型：{item.kind}")
             lines.append(f"- 报告分：{score}")
+            lines.append(f"- 为什么重要：{why_it_matters(item, query)}")
+            lines.append(f"- 下一步：{next_action_for(item)}")
+            if getattr(item, "fetcher", ""):
+                lines.append(f"- 抽取器：{item.fetcher}")
+            if getattr(item, "fetch_error", ""):
+                lines.append(f"- 抽取警告：{item.fetch_error}")
             if item.stars is not None:
                 lines.append(f"- GitHub：{item.stars} stars / {item.forks or 0} forks")
             if item.published:
@@ -152,6 +203,7 @@ def render_report(query: str, ranked: list[tuple[Item, int]], total: int, depth:
             "- 如果你要写日报：优先用“结论速览”的前 5 条做主线。",
             "- 如果你要做选题：按 `research-entry`、`ai-radar`、`crawler` 判断能否接入工作流。",
             "- 如果你要继续深挖：拿条目的 URL 再做二次网页读取和交叉验证。",
+            "- 如果你要维护系统：先看 `site/data/source_health.json` 和 `reports/source-health.md`。",
             "",
         ]
     )
@@ -162,7 +214,15 @@ def write_json_report(path: Path, query: str, ranked: list[tuple[Item, int]]) ->
     payload: dict[str, Any] = {
         "query": query,
         "generated_at": local_now().isoformat(),
-        "items": [{**item_to_dict(item), "report_score": score} for item, score in ranked],
+        "items": [
+            {
+                **item_to_dict(item),
+                "report_score": score,
+                "why_it_matters": why_it_matters(item, query),
+                "next_action": next_action_for(item),
+            }
+            for item, score in ranked
+        ],
     }
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
