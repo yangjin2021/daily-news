@@ -1,6 +1,6 @@
 # AGENTS.md
 
-这个仓库是一个 GPT / Codex 可调用的信息采集与报告工具。
+这个仓库是一个 GPT / Codex 可调用的信息采集、筛选与报告工具。
 
 定位：
 
@@ -8,6 +8,7 @@
 Agent-Reach      → 调研入口聚合
 AI News Radar    → 信源筛选、去重、打分、分类
 Scrapling        → 网页抽取 fallback 方向
+topics.yaml      → 长期关注主题与判断框架
 daily-news       → 存储、报告、网页信息站
 ```
 
@@ -43,11 +44,24 @@ python scripts/report.py --query "<用户主题>" --max-items 20 --depth deep --
 python scripts/report.py --query "<用户主题>" --max-items 8 --depth brief --print
 ```
 
+如果用户要求按长期主题看，使用：
+
+```bash
+python scripts/report.py --topic "Agent 工具生态" --max-items 12 --depth standard --print
+```
+
+可以重复传入多个主题：
+
+```bash
+python scripts/report.py --topic "Agent 工具生态" --topic "网页抓取与信息入口" --print
+```
+
 ## 输出文件位置
 
+- `topics.yaml`：长期关注主题、关键词、优先级和行动策略
 - `reports/YYYY-MM-DD-<topic>.md`：给人和 GPT 读的主题报告
-- `reports/latest-report.json`：结构化结果，包含 `why_it_matters` 和 `next_action`
-- `outputs/YYYY-MM-DD.md`：全量每日原料
+- `reports/latest-report.json`：结构化结果，包含 `topic_coverage`、`matched_topics`、`why_it_matters` 和 `next_action`
+- `outputs/YYYY-MM-DD.md`：全量每日原料，包含 source_state、topic_tags、matched_topics
 - `site/data/news.json`：网页信息站数据
 - `site/data/source_health.json`：信源健康状态
 - `reports/source-health.md`：给人读的信源健康报告
@@ -59,8 +73,34 @@ python scripts/report.py --query "<用户主题>" --max-items 8 --depth brief --
 - 用户要深挖时用 `--depth deep`。
 - 用户要简报时用 `--depth brief`。
 - 运行后把报告里的关键结论直接回复给用户，并给出报告文件路径。
-- 如果报告质量差，先检查 `site/data/source_health.json`，再考虑改 `sources.yaml`。
-- 长期观察源优先看 `observe: true`、`priority` 和 `watch_reason`。
+- 如果报告质量差，先检查 `site/data/source_health.json`，再考虑改 `sources.yaml` 或 `topics.yaml`。
+- 长期观察源优先看 `observe: true`、`priority`、`source_state`、`topic_tags` 和 `watch_reason`。
+
+## source_state 规则
+
+- `keep`：稳定高信号，进入主视图。
+- `observe`：观察 3-7 天，结合 source_health 决定升权或降权。
+- `degrade`：保留但降权，只有命中强主题时才进入主报告。
+- `remove`：准备删除，不再采集。
+- `disabled`：临时关闭，不再采集。
+
+## 当前长期主题
+
+P0：
+
+- `Agent 工具生态`
+- `网页抓取与信息入口`
+- `AI 信息雷达与信源治理`
+
+P1：
+
+- `模型评估与科研智能`
+- `AI 编程与工具调用稳定性`
+
+P2：
+
+- `开源安全与供应链`
+- `AI 产品与工作流`
 
 ## 长期观察源
 
