@@ -10,6 +10,7 @@ on:
     paths:
       - "sources.yaml"
       - "topics.yaml"
+      - "agent_reach.yaml"
       - "scripts/**"
       - "site/**"
       - "AGENTS.md"
@@ -38,14 +39,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Collect daily news
-        run: python scripts/collect.py
+        run: python scripts/collect_with_agent_reach.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENABLE_AGENT_REACH: ${{ vars.ENABLE_AGENT_REACH }}
+          AGENT_REACH_COMMAND_TEMPLATE: ${{ vars.AGENT_REACH_COMMAND_TEMPLATE }}
       - name: Commit generated outputs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update daily news radar"
-          file_pattern: "outputs/*.md site/data/news.json site/data/source_health.json reports/source-health.md"
+          file_pattern: "outputs/*.md site/data/news.json site/data/source_health.json site/data/agent_reach.json reports/source-health.md reports/agent-reach-latest.md"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
