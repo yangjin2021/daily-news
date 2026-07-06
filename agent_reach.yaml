@@ -1,0 +1,92 @@
+# Agent-Reach 执行层配置
+# 目标：把“AI 自己去平台找信息”的能力作为可控、可审计、可关闭的入口接入 daily-news。
+# 默认不会自动登录或使用个人 Cookie。需要真实调用时设置 ENABLE_AGENT_REACH=1，并在本地/Actions 环境安装 Agent-Reach。
+
+version: 1
+
+execution:
+  enabled_by_default: false
+  env_enable_flag: ENABLE_AGENT_REACH
+  timeout_seconds: 90
+  max_results_per_task: 6
+  allow_login_platforms: false
+  allow_cookie_reuse: false
+  notes:
+    - 默认只做公开入口探测，不自动读取私密账号、Cookie、登录态。
+    - 小红书、Twitter、Reddit 等需要登录态的平台，应优先本地运行，不建议直接放进公开 CI。
+    - GitHub Actions 里如果没有安装 Agent-Reach，脚本会生成 probe 报告而不会失败。
+
+cli:
+  candidates:
+    - agent-reach
+    - agent_reach
+    - opencli
+  command_template: "agent-reach search --query {query} --platform {platform} --limit {limit}"
+  # 如果实际 CLI 命令不同，可以通过环境变量覆盖：
+  # AGENT_REACH_COMMAND_TEMPLATE='agent-reach search --query {query} --platform {platform} --limit {limit}'
+
+platforms:
+  public_first:
+    - github
+    - youtube
+    - reddit
+    - web
+  login_sensitive:
+    - xiaohongshu
+    - bilibili
+    - twitter
+
+output:
+  json: site/data/agent_reach.json
+  markdown: reports/agent-reach-latest.md
+
+queries:
+  - name: Agent 工具生态
+    query: "AI Agent 工具生态 Claude Code Codex MCP skill workflow"
+    platforms:
+      - github
+      - youtube
+      - reddit
+      - web
+    priority: P0
+    topic_tags:
+      - Agent 工具生态
+      - AI 编程与工具调用稳定性
+    reason: 发现 Agent 工具、skill、MCP、工作流和可接入 daily-news 的项目。
+
+  - name: 网页抓取与信息入口
+    query: "Agent 网页抓取 Scrapling Playwright browser fetcher dynamic page"
+    platforms:
+      - github
+      - youtube
+      - reddit
+      - web
+    priority: P0
+    topic_tags:
+      - 网页抓取与信息入口
+    reason: 发现新的抓取器、浏览器代理、动态网页读取和反爬 fallback 方案。
+
+  - name: 小红书内容工作流观察
+    query: "AI 自动刷小红书 内容选题 信息收集 Agent"
+    platforms:
+      - xiaohongshu
+      - web
+    priority: P1
+    requires_login: true
+    topic_tags:
+      - Agent 工具生态
+      - AI 产品与工作流
+    reason: 只做能力观察；涉及登录态时应本地执行，不在 CI 默认开启。
+
+  - name: B站与视频理解入口
+    query: "AI Agent B站 YouTube 视频总结 字幕 提取 信息收集"
+    platforms:
+      - bilibili
+      - youtube
+      - web
+    priority: P1
+    requires_login: true
+    topic_tags:
+      - Agent 工具生态
+      - 网页抓取与信息入口
+    reason: 观察 Agent 读取视频、字幕、教程和多平台内容的能力。
