@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "sources.yaml"
+      - "topics.yaml"
       - "scripts/**"
       - "site/**"
       - "AGENTS.md"
