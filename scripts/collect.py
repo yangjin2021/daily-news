@@ -5,10 +5,10 @@ import html
 import json
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
-from html.parser import HTMLParser
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 from urllib.error import URLError
 from urllib.request import Request, urlopen
@@ -20,10 +20,12 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES_FILE = ROOT / "sources.yaml"
 OUTPUT_DIR = ROOT / "outputs"
+REPORT_DIR = ROOT / "reports"
 SITE_DIR = ROOT / "site"
 SITE_DATA_DIR = SITE_DIR / "data"
 DEFAULT_KEYWORDS = ["AI", "agent", "LLM", "model", "GitHub", "crawler", "research"]
-USER_AGENT = "daily-news-radar/1.0 (+https://github.com/yangjin2021/daily-news)"
+USER_AGENT = "daily-news-radar/1.1 (+https://github.com/yangjin2021/daily-news)"
+ENABLE_SCRAPLING_FALLBACK = os.getenv("ENABLE_SCRAPLING_FALLBACK", "").lower() in {"1", "true", "yes"}
 
 
 @dataclass
@@ -40,6 +42,30 @@ class Item:
     score: int
     stars: int | None = None
     forks: int | None = None
+    fetched_at: str = ""
+    fetcher: str = ""
+    fetch_error: str = ""
+    observed: bool = False
+    source_priority: str = ""
+    watch_reason: str = ""
+
+
+@dataclass
+class SourceHealth:
+    name: str
+    type: str
+    category: str
+    url: str
+    observed: bool
+    priority: str
+    status: str
+    item_count: int
+    error: str
+    started_at: str
+    finished_at: str
+    duration_seconds: float
+    max_score: int
+    average_score: float
 
 
 def clean_text(value: str | None, max_chars: int = 1200) -> str:
@@ -75,24 +101,76 @@ def http_json(url: str) -> dict[str, Any]:
         return json.loads(response.read().decode("utf-8"))
 
 
-def extract_page_text(url: str) -> str:
-    """Best-effort article extraction. Fail softly so the daily run keeps going."""
+def extract_with_trafilatura(url: str) -> tuple[str, str]:
+    downloaded = trafilatura.fetch_url(url)
+    if not downloaded:
+        return "", "trafilatura returned empty response"
+    extracted = trafilatura.extract(
+        downloaded,
+        include_comments=False,
+        include_tables=False,
+        favor_precision=True,
+    )
+    text = clean_text(extracted, max_chars=1800)
+    if not text:
+        return "", "trafilatura extracted empty text"
+    return text, ""
+
+
+def extract_with_scrapling(url: str) -> tuple[str, str]:
+    """Optional fallback. Enabled with ENABLE_SCRAPLING_FALLBACK=1 and an installed scrapling package."""
     try:
-        downloaded = trafilatura.fetch_url(url)
-        if not downloaded:
-            return ""
-        extracted = trafilatura.extract(
-            downloaded,
-            include_comments=False,
-            include_tables=False,
-            favor_precision=True,
-        )
-        return clean_text(extracted, max_chars=1800)
+        from scrapling.fetchers import Fetcher  # type: ignore
     except Exception as exc:  # noqa: BLE001
-        return f"[extract_error: {exc}]"
+        return "", f"scrapling unavailable: {exc}"
+
+    try:
+        page = Fetcher.fetch(url)
+    except AttributeError:
+        try:
+            page = Fetcher().get(url)
+        except Exception as exc:  # noqa: BLE001
+            return "", f"scrapling fetch failed: {exc}"
+    except Exception as exc:  # noqa: BLE001
+        return "", f"scrapling fetch failed: {exc}"
+
+    text = clean_text(getattr(page, "text", "") or getattr(page, "body", ""), max_chars=1800)
+    if not text:
+        return "", "scrapling extracted empty text"
+    return text, ""
 
 
-def load_sources() -> list[dict[str, Any]]:
+def extract_page_text(url: str) -> tuple[str, str, str]:
+    """Best-effort article extraction.
+
+    Returns (text, fetcher, error). Trafilatura is the default stable path.
+    Scrapling is wired as an optional fallback so the workflow does not break if
+    the package is not installed or a dynamic page needs deeper extraction later.
+    """
+    if not url:
+        return "", "none", "empty url"
+
+    errors: list[str] = []
+    try:
+        text, error = extract_with_trafilatura(url)
+        if text:
+            return text, "trafilatura", ""
+        if error:
+            errors.append(error)
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"trafilatura failed: {exc}")
+
+    if ENABLE_SCRAPLING_FALLBACK:
+        text, error = extract_with_scrapling(url)
+        if text:
+            return text, "scrapling", ""
+        if error:
+            errors.append(error)
+
+    return "", "none", "; ".join(errors)
+
+
+def load_sources() -> dict[str, Any]:
     with SOURCES_FILE.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
     return data
@@ -111,10 +189,19 @@ def rank_item(title: str, summary: str, text: str, category: str, keywords: list
     return score
 
 
+def source_meta(source: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "observed": bool(source.get("observe", False)),
+        "source_priority": str(source.get("priority", "")),
+        "watch_reason": str(source.get("watch_reason", "")),
+    }
+
+
 def collect_rss(source: dict[str, Any], keywords: list[str]) -> list[Item]:
     parsed = feedparser.parse(source["url"])
     limit = int(source.get("limit", 10))
     items: list[Item] = []
+    meta = source_meta(source)
 
     for entry in parsed.entries[:limit]:
         url = entry.get("link", "")
@@ -124,7 +211,7 @@ def collect_rss(source: dict[str, Any], keywords: list[str]) -> list[Item]:
             max_chars=120,
         )
         summary = clean_text(entry.get("summary") or entry.get("description") or "")
-        text = extract_page_text(url) if url else ""
+        text, fetcher, fetch_error = extract_page_text(url)
         items.append(
             Item(
                 id=make_id(url, title),
@@ -137,6 +224,10 @@ def collect_rss(source: dict[str, Any], keywords: list[str]) -> list[Item]:
                 summary=summary,
                 text=text,
                 score=rank_item(title, summary, text, source.get("category", "general"), keywords),
+                fetched_at=local_now().isoformat(),
+                fetcher=fetcher,
+                fetch_error=fetch_error,
+                **meta,
             )
         )
     return items
@@ -147,6 +238,9 @@ def collect_github(source: dict[str, Any], keywords: list[str]) -> list[Item]:
     if not repo:
         return []
 
+    meta = source_meta(source)
+    fetch_error = ""
+    fetcher = "trafilatura"
     try:
         data = http_json(f"https://api.github.com/repos/{repo}")
         title = f"{repo}: {clean_text(data.get('description') or source.get('note') or repo, 260)}"
@@ -159,9 +253,13 @@ def collect_github(source: dict[str, Any], keywords: list[str]) -> list[Item]:
         stars = None
         forks = None
         data = {"html_url": source.get("url", ""), "description": f"GitHub API unavailable: {exc}"}
+        fetch_error = f"GitHub API unavailable: {exc}"
 
     summary = clean_text(source.get("note") or data.get("description") or "")
-    text = extract_page_text(source.get("url", data.get("html_url", "")))
+    text, page_fetcher, page_error = extract_page_text(source.get("url", data.get("html_url", "")))
+    fetcher = page_fetcher
+    if page_error:
+        fetch_error = "; ".join(part for part in [fetch_error, page_error] if part)
     score = rank_item(title, summary, text, source.get("category", "github"), keywords)
     if stars:
         score += min(stars // 1000, 25)
@@ -180,6 +278,10 @@ def collect_github(source: dict[str, Any], keywords: list[str]) -> list[Item]:
             score=score,
             stars=stars,
             forks=forks,
+            fetched_at=local_now().isoformat(),
+            fetcher=fetcher,
+            fetch_error=fetch_error,
+            **meta,
         )
     ]
 
@@ -193,7 +295,7 @@ def collect_page(source: dict[str, Any], keywords: list[str]) -> list[Item]:
     title = source.get("name", source.get("url", "Page"))
     url = source.get("url", "")
     summary = clean_text(source.get("note") or "页面入口，适合后续用 Scrapling / Playwright 做深度抽取。")
-    text = extract_page_text(url)
+    text, fetcher, fetch_error = extract_page_text(url)
     return [
         Item(
             id=make_id(url, title),
@@ -206,28 +308,82 @@ def collect_page(source: dict[str, Any], keywords: list[str]) -> list[Item]:
             summary=summary,
             text=text,
             score=rank_item(title, summary, text, source.get("category", "page"), keywords),
+            fetched_at=local_now().isoformat(),
+            fetcher=fetcher,
+            fetch_error=fetch_error,
+            **source_meta(source),
         )
     ]
 
 
-def collect() -> list[Item]:
+def collect_source(source: dict[str, Any], keywords: list[str]) -> tuple[list[Item], SourceHealth]:
+    source_type = source.get("type", "rss")
+    started = local_now()
+    start_perf = perf_counter()
+    status = "ok"
+    error = ""
+    items: list[Item] = []
+
+    try:
+        if source_type == "rss":
+            items = collect_rss(source, keywords)
+        elif source_type == "github":
+            items = collect_github(source, keywords)
+        elif source_type == "page":
+            items = collect_page(source, keywords)
+        else:
+            status = "skipped"
+            error = f"unsupported source type: {source_type}"
+            print(f"Skipping unsupported source type: {source_type}")
+    except Exception as exc:  # noqa: BLE001
+        status = "error"
+        error = str(exc)
+        print(f"Source failed: {source.get('name', 'Unknown')} ({source_type}) - {exc}")
+
+    if status == "ok" and not items:
+        status = "empty"
+
+    fetch_errors = [item.fetch_error for item in items if item.fetch_error]
+    if status == "ok" and fetch_errors:
+        status = "partial"
+        error = "; ".join(fetch_errors[:3])
+
+    finished = local_now()
+    scores = [item.score for item in items]
+    health = SourceHealth(
+        name=source.get("name", "Unknown"),
+        type=source_type,
+        category=source.get("category", "general"),
+        url=source.get("url", ""),
+        observed=bool(source.get("observe", False)),
+        priority=str(source.get("priority", "")),
+        status=status,
+        item_count=len(items),
+        error=clean_text(error, max_chars=500),
+        started_at=started.isoformat(),
+        finished_at=finished.isoformat(),
+        duration_seconds=round(perf_counter() - start_perf, 3),
+        max_score=max(scores) if scores else 0,
+        average_score=round(sum(scores) / len(scores), 2) if scores else 0.0,
+    )
+    return items, health
+
+
+def collect_with_health() -> tuple[list[Item], list[SourceHealth]]:
     config = load_sources()
     keywords = list(config.get("ranking", {}).get("keywords", DEFAULT_KEYWORDS))
     results: list[Item] = []
+    health: list[SourceHealth] = []
     for source in config.get("sources", []):
-        source_type = source.get("type", "rss")
-        try:
-            if source_type == "rss":
-                results.extend(collect_rss(source, keywords))
-            elif source_type == "github":
-                results.extend(collect_github(source, keywords))
-            elif source_type == "page":
-                results.extend(collect_page(source, keywords))
-            else:
-                print(f"Skipping unsupported source type: {source_type}")
-        except Exception as exc:  # noqa: BLE001
-            print(f"Source failed: {source.get('name', 'Unknown')} ({source_type}) - {exc}")
-    return dedupe(results)
+        source_items, source_health = collect_source(source, keywords)
+        results.extend(source_items)
+        health.append(source_health)
+    return dedupe(results), health
+
+
+def collect() -> list[Item]:
+    items, _health = collect_with_health()
+    return items
 
 
 def dedupe(items: list[Item]) -> list[Item]:
@@ -242,20 +398,7 @@ def dedupe(items: list[Item]) -> list[Item]:
 
 
 def item_to_dict(item: Item) -> dict[str, Any]:
-    return {
-        "id": item.id,
-        "source": item.source,
-        "category": item.category,
-        "kind": item.kind,
-        "title": item.title,
-        "url": item.url,
-        "published": item.published,
-        "summary": item.summary,
-        "text": item.text,
-        "score": item.score,
-        "stars": item.stars,
-        "forks": item.forks,
-    }
+    return asdict(item)
 
 
 def render_markdown(items: list[Item]) -> str:
@@ -285,6 +428,14 @@ def render_markdown(items: list[Item]) -> str:
             lines.append(f"- Score: {item.score}")
             lines.append(f"- Published: {item.published or 'Unknown'}")
             lines.append(f"- URL: {item.url}")
+            if item.fetcher:
+                lines.append(f"- Fetcher: {item.fetcher}")
+            if item.source_priority:
+                lines.append(f"- Priority: {item.source_priority}")
+            if item.watch_reason:
+                lines.append(f"- Watch reason: {item.watch_reason}")
+            if item.fetch_error:
+                lines.append(f"- Fetch warning: {item.fetch_error}")
             if item.stars is not None:
                 lines.append(f"- GitHub: {item.stars} stars / {item.forks or 0} forks")
             if item.summary:
@@ -304,7 +455,7 @@ def render_markdown(items: list[Item]) -> str:
     return "\n".join(lines)
 
 
-def write_site_data(items: list[Item]) -> None:
+def write_site_data(items: list[Item], health: list[SourceHealth] | None = None) -> None:
     SITE_DATA_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
         "generated_at": local_now().isoformat(),
@@ -312,11 +463,50 @@ def write_site_data(items: list[Item]) -> None:
         "items": [item_to_dict(item) for item in items],
         "categories": counts(items, "category"),
         "sources": counts(items, "source"),
+        "source_health": [asdict(row) for row in health or []],
     }
     (SITE_DATA_DIR / "news.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
+
+def write_source_health(health: list[SourceHealth]) -> None:
+    SITE_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    REPORT_DIR.mkdir(exist_ok=True)
+    payload = {
+        "generated_at": local_now().isoformat(),
+        "sources": [asdict(row) for row in health],
+        "summary": counts_health(health),
+    }
+    (SITE_DATA_DIR / "source_health.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    (REPORT_DIR / "source-health.md").write_text(render_source_health_markdown(health), encoding="utf-8")
+
+
+def render_source_health_markdown(health: list[SourceHealth]) -> str:
+    now = local_now()
+    lines = [
+        f"# Source Health - {now.strftime('%Y-%m-%d')}",
+        "",
+        f"Generated at: {now.isoformat()}",
+        "",
+        "| Source | Type | Status | Items | Max score | Avg score | Duration | Priority |",
+        "|---|---|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in health:
+        lines.append(
+            f"| {row.name} | {row.type} | {row.status} | {row.item_count} | {row.max_score} | "
+            f"{row.average_score} | {row.duration_seconds}s | {row.priority or '-'} |"
+        )
+    failed = [row for row in health if row.status in {"error", "partial", "empty"}]
+    if failed:
+        lines.extend(["", "## Warnings", ""])
+        for row in failed:
+            lines.append(f"- **{row.name}**: {row.status} - {row.error or 'no items returned'}")
+    return "\n".join(lines)
 
 
 def counts(items: list[Item], field: str) -> dict[str, int]:
@@ -327,14 +517,25 @@ def counts(items: list[Item], field: str) -> dict[str, int]:
     return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
 
 
+def counts_health(health: list[SourceHealth]) -> dict[str, int]:
+    result: dict[str, int] = {}
+    for row in health:
+        result[row.status] = result.get(row.status, 0) + 1
+    return dict(sorted(result.items(), key=lambda pair: pair[1], reverse=True))
+
+
 def main() -> None:
     OUTPUT_DIR.mkdir(exist_ok=True)
-    items = collect()
+    items, health = collect_with_health()
     today = local_now().strftime("%Y-%m-%d")
     output_file = OUTPUT_DIR / f"{today}.md"
     output_file.write_text(render_markdown(items), encoding="utf-8")
-    write_site_data(items)
-    print(f"Wrote {output_file.relative_to(ROOT)} and site/data/news.json with {len(items)} items")
+    write_site_data(items, health)
+    write_source_health(health)
+    print(
+        f"Wrote {output_file.relative_to(ROOT)}, site/data/news.json, "
+        f"and site/data/source_health.json with {len(items)} items"
+    )
 
 
 if __name__ == "__main__":
