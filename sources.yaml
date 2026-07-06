@@ -1,5 +1,6 @@
 # 每日内容来源配置
 # type 支持：rss / github / page
+# source_state 支持：keep / observe / degrade / remove / disabled
 # 目标：把 Agent-Reach 的调研入口、AI News Radar 的筛选、Scrapling 的页面抽取整合成信息收集站。
 
 site:
@@ -34,8 +35,12 @@ sources:
     category: research-entry
     limit: 1
     observe: true
+    source_state: keep
     priority: P0
     cadence: daily
+    topic_tags:
+      - Agent 工具生态
+      - 网页抓取与信息入口
     watch_reason: Agent 上网与调研入口聚合，决定信息系统能接触哪些网页、社区、仓库和趋势入口。
     note: Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。
 
@@ -46,8 +51,11 @@ sources:
     category: ai-radar
     limit: 1
     observe: true
+    source_state: keep
     priority: P0
     cadence: daily
+    topic_tags:
+      - AI 信息雷达与信源治理
     watch_reason: 长期观察信源筛选、去重、打分、AI 强相关过滤和静态信息站 pipeline。
     note: 24 小时 AI 更新雷达，按信息源筛选、去重、分类并生成可读视图。
 
@@ -58,8 +66,11 @@ sources:
     category: crawler
     limit: 1
     observe: true
+    source_state: keep
     priority: P0
     cadence: daily
+    topic_tags:
+      - 网页抓取与信息入口
     watch_reason: 长期观察现代网页抓取、自适应选择器、动态页面、Spider 和反爬 fallback 能力。
     note: 面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。
 
@@ -68,54 +79,126 @@ sources:
     url: https://news.ycombinator.com/rss
     category: tech
     limit: 8
+    observe: true
+    source_state: observe
+    priority: P2
+    cadence: daily
+    topic_tags:
+      - Agent 工具生态
+      - 网页抓取与信息入口
+      - AI 编程与工具调用稳定性
+    watch_reason: 高噪音但高发现价值；先观察 7 天，按命中主题和抽取质量决定保留或降权。
 
   - name: GitHub Blog
     type: rss
     url: https://github.blog/feed/
     category: dev
     limit: 5
+    observe: true
+    source_state: keep
+    priority: P1
+    cadence: daily
+    topic_tags:
+      - AI 编程与工具调用稳定性
+      - 开源安全与供应链
+    watch_reason: 开发者生态、Git、安全、供应链和 GitHub 平台能力的稳定来源。
 
   - name: OpenAI Blog
     type: rss
     url: https://openai.com/news/rss.xml
     category: ai
     limit: 5
+    observe: true
+    source_state: keep
+    priority: P1
+    cadence: daily
+    topic_tags:
+      - 模型评估与科研智能
+      - AI 编程与工具调用稳定性
+    watch_reason: 官方 AI 能力、产品、研究、评估与基础设施信号。
 
   - name: Anthropic News
     type: rss
     url: https://www.anthropic.com/news/rss.xml
     category: ai
     limit: 5
+    observe: true
+    source_state: observe
+    priority: P2
+    cadence: daily
+    topic_tags:
+      - Agent 工具生态
+      - AI 编程与工具调用稳定性
+    watch_reason: 今天为空，先观察 7 天；若连续为空，替换为更稳定的 Anthropic/Claude 来源。
 
   - name: Google DeepMind Blog
     type: rss
     url: https://deepmind.google/discover/blog/rss.xml
     category: ai
     limit: 5
+    observe: true
+    source_state: observe
+    priority: P2
+    cadence: daily
+    topic_tags:
+      - 模型评估与科研智能
+    watch_reason: 今天为空，先观察 7 天；若连续为空，寻找替代 RSS 或改为 page 抽取。
 
   - name: The Batch
     type: rss
     url: https://www.deeplearning.ai/the-batch/feed/
     category: ai
     limit: 5
+    observe: true
+    source_state: observe
+    priority: P2
+    cadence: daily
+    topic_tags:
+      - 模型评估与科研智能
+      - AI 信息雷达与信源治理
+    watch_reason: 今天为空，先观察 7 天；如果质量稳定不足，降权或删除。
 
   - name: Product Hunt Daily
     type: rss
     url: https://www.producthunt.com/feed
     category: product
     limit: 8
+    observe: true
+    source_state: degrade
+    priority: P2
+    cadence: daily
+    topic_tags:
+      - AI 产品与工作流
+      - Agent 工具生态
+    watch_reason: 产品信号多但噪音也多；只在命中 AI Agent、MCP、workflow、知识库等主题时升权。
 
   - name: Simon Willison
     type: rss
     url: https://simonwillison.net/atom/everything/
     category: ai-dev
     limit: 5
+    observe: true
+    source_state: keep
+    priority: P1
+    cadence: daily
+    topic_tags:
+      - AI 编程与工具调用稳定性
+      - Agent 工具生态
+      - 模型评估与科研智能
+    watch_reason: 高信号 AI 开发者观察源，适合进入每日主视图。
 
   - name: Daily JS
     type: rss
     url: https://dailyjs.com/rss.xml
     category: dev
     limit: 5
+    observe: true
+    source_state: observe
+    priority: P3
+    cadence: daily
+    topic_tags:
+      - AI 编程与工具调用稳定性
+    watch_reason: 今天为空且耗时高；观察 3 天，若继续为空建议删除。
 
   - name: GitHub Trending Python
     type: page
@@ -123,8 +206,13 @@ sources:
     category: github-trending
     limit: 1
     observe: true
+    source_state: keep
     priority: P1
     cadence: daily
+    topic_tags:
+      - Agent 工具生态
+      - 网页抓取与信息入口
+      - AI 编程与工具调用稳定性
     watch_reason: 每日趋势入口，适合发现新的工具、库和可接入工作流的项目。
     note: 每日 Python 趋势仓库入口，用来发现可接入工作流的新工具。
 
@@ -134,7 +222,12 @@ sources:
     category: github-trending
     limit: 1
     observe: true
+    source_state: keep
     priority: P1
     cadence: daily
+    topic_tags:
+      - Agent 工具生态
+      - 网页抓取与信息入口
+      - AI 产品与工作流
     watch_reason: 每日 GitHub 趋势入口，先判断能否接入工作流，再看星标热度。
     note: 每日 GitHub 趋势入口，先看能不能接入工作流，再看星标热度。
