@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T08:45:45.844056+08:00",
+  "generated_at": "2026-07-06T09:19:41.828317+08:00",
   "total": 36,
   "items": [
     {
@@ -13,8 +13,8 @@
       "summary": "Agent 上网与调研入口聚合，把网页、视频、社区、仓库交给 Agent 查。",
       "text": "给你的 AI Agent 一键装上互联网能力 当下最稳的接入方式，替你选好、装好、体检好——接入方式会换代，你不用操心 快速开始 · English · 日本語 · 한국어 · 支持平台 · 设计理念 AI Agent 已经能帮你写代码、改文档、管项目——但你让它去网上找点东西，它就抓瞎了： - 📺 \"帮我看看这个 YouTube 教程讲了什么\" → 看不了，拿不到字幕 - 🐦 \"帮我搜一下推特上大家怎么评价这个产品\" → 搜不了，Twitter API 要付费 - 📖 \"去 Reddit 上看看有没有人遇到过同样的 bug\" → 403 被封，服务器 IP 被拒 - 📕 \"帮我看看小红书上这个品的口碑\" → 打不开，必须登录才能看 - 📺 \"B站上有个技术视频，帮我总结一下\" → 拿不到，通用下载工具被 B站风控全面拦截 - 🔍 \"帮我在网上搜一下最新的 LLM 框架对比\" → 没有好用的搜索，要么付费要么质量差 - 🌐 \"帮我看看这个网页写了啥\" → 抓回来一堆 HTML 标签，根本没法读 - 📦 \"这个 GitHub 仓库是干嘛的？Issue 里说了什么？\" → 能用，但认证配置很麻烦 - 📡 \"帮我订阅这几个 RSS 源，有更新告诉我\" → 要自己装库写代码 这些不难实现，但是需要自己折腾配置 每个平台都有自己的门槛——要付费的 API、要绕过的封锁、要登录的账号、要清洗的数据。你要一个一个去踩坑、装工具、调配置，光是让 Agent 能读个推特就得折腾半天。 Agent Reach 把这件事变成一句话： 帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md 复制给你的 Agent，几分钟后它就能读推特、搜 Reddit、看 YouTube、刷小红书了。 已经装过了？更新也是一句话： 帮我更新 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/update.md ⭐ Star 这个项目，我们会持续追踪各平台的变化、接入新的渠道。你不用自己盯——平台封了我们修，有新渠道我们加。 不知道怎么配？不用查文档。 直接告诉 Agent「帮我配 XXX」，它知道需要什么、会一步一步引导你。 🍪 需要 Cookie/登录态的平台（Twitter、小红书、Reddit、Facebook、Instagram 等），优先让用户在自己的浏览器里登录。OpenCLI 复用 Chrome 登录态；传统 CLI 才需要 Cookie-Editor 导出 Cookie。 🔒 Cookie 只存在你本地，不上传不外传。代码完全开源，随时可审查。 💻 本地电脑不需要代理。代理只有部署在服务器上才需要（~$1/月）。 ⚠️ OpenClaw 用户请先确认 exec 权限已开启Agent Reach 依赖 Agent 执行 shell 命令（ pip install 、mcporter 、messaging 工具配置，Agent 将无法执行命令。安装前请先开启 exec 权限：openclaw config set tools.profile \"coding\"或在 ~/.openclaw/openclaw.json 中设置\"tools\": { \"profile\": \"coding\" } 。 设置后重启 Gateway（openclaw gateway restart ）并开启新对话即可。其他平台（Claude Code、Cursor、Windsurf 等）不受此限制。 复制这句话给你的 AI Agent（Claude Code、OpenClaw、Cursor 等）： 帮我安装 Agent Reach：https://raw.githubusercontent.com/Panniantong/agent-reach/main/docs/install.md 就这一步。Agent 会自己完成剩下的所有事情。 🔄 已安装过？ 更新也是一句话： 帮我更新 Agent Reach：https://raw.githubusercont...",
       "score": 44,
-      "stars": 51283,
-      "forks": 4118
+      "stars": 51299,
+      "forks": 4119
     },
     {
       "id": "df11630e65be505c",
@@ -27,8 +27,8 @@
       "summary": "面向现代网页的内容抽取与抓取能力，补足 RSS 覆盖不到的页面。",
       "text": "العربيه | Español | Português (Brasil) | Français | Deutsch | 简体中文 | 日本語 | Русский | 한국어 Selection methods · Fetchers · Spiders · Proxy Rotation · CLI · MCP Scrapling is an adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl. Its parser learns from website changes and automatically relocates your elements when pages update. Its fetchers bypass anti-bot systems like Cloudflare Turnstile out of the box. And its spider framework lets you scale up to concurrent, multi-session crawls with pause/resume and automatic proxy rotation - all in a few lines of Python. One library, zero compromises. Blazing fast crawls with real-time stats and streaming. Built by Web Scrapers for Web Scrapers and regular users, there's something for everyone. from scrapling.fetchers import Fetcher, AsyncFetcher, StealthyFetcher, DynamicFetcher StealthyFetcher.adaptive = True p = StealthyFetcher.fetch('https://example.com', headless=True, network_idle=True) # Fetch website under the radar! products = p.css('.product', auto_save=True) # Scrape data that survives website design changes! products = p.css('.product', adaptive=True) # Later, if the website structure changes, pass `adaptive=True` to find them! Or scale up to full crawls from scrapling.spiders import Spider, Response class MySpider(Spider): name = \"demo\" start_urls = [\"https://example.com/\"] async def parse(self, response: Response): for item in response.css('.product'): yield {\"title\": item.css('h2::text').get()} MySpider().start() Do you want to show your ad here? Click here Do you want to show your ad here? Click here and choose the tier that suits you! - 🕷️ Scrapy-like Spider API: Define spiders with start_urls , asyncparse callbacks, andRequest /Response objects. - ⚡ Concurrent Crawling:...",
       "score": 41,
-      "stars": 68234,
-      "forks": 6757
+      "stars": 68241,
+      "forks": 6758
     },
     {
       "id": "504ab131bf9a634a",
@@ -37,7 +37,7 @@
       "kind": "page",
       "title": "GitHub Trending Python",
       "url": "https://github.com/trending/python?since=daily",
-      "published": "2026-07-06T00:45:44.602423+00:00",
+      "published": "2026-07-06T01:19:40.719333+00:00",
       "summary": "每日 Python 趋势仓库入口，用来发现可接入工作流的新工具。",
       "text": "337 Claude Code skills & agent skills & plugins (30+ Agents, 70+ custom commands, 330+ skills, customizable references, scripts)for Claude Code, Codex, Gemini CLI, Cursor, and 8 more coding agents — engineering, marketing, product, compliance, C-level advisory, research, business operations, commercial & finance, and your daily productivity skills. A beautiful, powerful, self-hosted rom manager and player. Machine Learning Systems Open-source AI penetration testing tool to find and fix your app’s vulnerabilities. A hand-picked collection of the finest of resources for the most awesome of agents, Claude Code, the undisputed champion of coding companions, from the unstoppable team at Anthropic PBC. A delectable showcase of top tier skills, ambidextrous agents, scintillating status lines, top notch developer tooling, and also we have plugins Persistent file-based planning for AI coding agents and long-running agentic tasks. Crash-proof markdown plans that survive context loss and /clear, plus a deterministic completion gate and multi-agent shared state on disk. Manus-style. Works with Claude Code, Codex CLI, Cursor, Kiro, OpenCode and 60+ agents via the SKILL.md standard. Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows - all through natural language commands. A list of free LLM inference resources accessible via API. TradingAgents: Multi-Agents LLM Financial Trading Framework Give Claude the ability to watch any video. /watch downloads, extracts frames, transcribes, hands it all to Claude. A Python library for building AI agents that leverage the full power of Google Antigravity. Build local voice agents with open-source mo...",
       "score": 27,
@@ -51,7 +51,7 @@
       "kind": "page",
       "title": "GitHub Trending",
       "url": "https://github.com/trending?since=daily",
-      "published": "2026-07-06T00:45:45.843249+00:00",
+      "published": "2026-07-06T01:19:41.827482+00:00",
       "summary": "每日 GitHub 趋势入口，先看能不能接入工作流，再看星标热度。",
       "text": "Privacy first, AI meeting assistant with 4x faster Parakeet/Whisper live transcription, speaker diarization, and Ollama summarization built on Rust. 100% local processing. no cloud required. Meetily (Meetly Ai - https://meetily.ai) is the #1 Self-hosted, Open-source Ai meeting note taker for macOS & Windows. Use Codex from Claude Code to review code or delegate tasks. Extracted system prompts from Anthropic - Claude Fable 5, Opus 4.8, Claude Code, Claude Design. OpenAI - ChatGPT 5.5 Thinking, GPT 5.5 Instant, Codex. Google - Gemini 3.5 Flash, 3.1 Pro, Antigravity. xAI - Grok, Cursor, Copilot, VS Code, Perplexity, and more. Updated regularly. Taste-Skill - gives your AI good taste. stops the AI from generating boring, generic slop 337 Claude Code skills & agent skills & plugins (30+ Agents, 70+ custom commands, 330+ skills, customizable references, scripts)for Claude Code, Codex, Gemini CLI, Cursor, and 8 more coding agents — engineering, marketing, product, compliance, C-level advisory, research, business operations, commercial & finance, and your daily productivity skills. A beautiful, powerful, self-hosted rom manager and player. agent multiplexer that lives in your terminal. JavaScript in-page GUI agent. Control web interfaces with natural language. Machine Learning Systems Open-source AI penetration testing tool to find and fix your app’s vulnerabilities. A hand-picked collection of the finest of resources for the most awesome of agents, Claude Code, the undisputed champion of coding companions, from the unstoppable team at Anthropic PBC. A delectable showcase of top tier skills, ambidextrous agents, scintillating status lines, top notch developer tooling, and also we have plugins Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and...",
       "score": 23,
@@ -249,7 +249,7 @@
       "url": "https://www.producthunt.com/products/docsalot-2",
       "published": "2026-07-01T16:09:51-07:00",
       "summary": "Documentation that works for both humans and AI systems Discussion | Link",
-      "text": "Launching today DocsAlot Documentation that works for both humans and AI systems 333 followers Documentation that works for both humans and AI systems 333 followers DocsAlot turns scattered help center articles, knowledge base, and developer docs into one source of truth for humans and AI agents. It includes hosted MCP, llms.txt, and skill.md. Your docs show up in AI answers, onboarding gets faster, and agents stop reading stale context.",
+      "text": "Launching today DocsAlot Documentation that works for both humans and AI systems 336 followers Documentation that works for both humans and AI systems 336 followers DocsAlot turns scattered help center articles, knowledge base, and developer docs into one source of truth for humans and AI agents. It includes hosted MCP, llms.txt, and skill.md. Your docs show up in AI answers, onboarding gets faster, and agents stop reading stale context.",
       "score": 9,
       "stars": null,
       "forks": null
@@ -263,7 +263,7 @@
       "url": "https://www.producthunt.com/products/mentiondrop",
       "published": "2026-06-19T00:54:26-07:00",
       "summary": "Give your AI agent live market signals Discussion | Link",
-      "text": "MentionDrop 8 billion pages scanned every day. Your brand found! 170 followers 8 billion pages scanned every day. Your brand found! 170 followers Monitor the entire web: blogs, forums, docs, foreign-language sites, and more. Every mention gets an AI summary, sentiment score, and suggested action. MentionDrop MCP Launching today MentionDrop MCP connects Claude, Cursor, Windsurf, and other MCP-aware agents to live brand monitoring. Your agent pulls brand mentions, competitor conversations, and public customer pain from bounded high-signal sources (Reddit, Google News, search, selected public web), triages them, and drafts replies for your review. 11 tools, account-scoped API keys, nothing auto-posted. Ask \"what should I pay attention to today?\" and get an answer you can act on. Free Options Launch Team",
+      "text": "MentionDrop 8 billion pages scanned every day. Your brand found! 173 followers 8 billion pages scanned every day. Your brand found! 173 followers Monitor the entire web: blogs, forums, docs, foreign-language sites, and more. Every mention gets an AI summary, sentiment score, and suggested action. MentionDrop MCP Launching today MentionDrop MCP connects Claude, Cursor, Windsurf, and other MCP-aware agents to live brand monitoring. Your agent pulls brand mentions, competitor conversations, and public customer pain from bounded high-signal sources (Reddit, Google News, search, selected public web), triages them, and drafts replies for your review. 11 tools, account-scoped API keys, nothing auto-posted. Ask \"what should I pay attention to today?\" and get an answer you can act on. Free Options Launch Team",
       "score": 9,
       "stars": null,
       "forks": null
@@ -361,7 +361,7 @@
       "url": "https://www.producthunt.com/products/endl",
       "published": "2026-07-03T12:10:29-07:00",
       "summary": "A global operating account for fiat, stablecoins, and cards. Discussion | Link",
-      "text": "Endl Where businesses pay and get paid globally 652 followers Where businesses pay and get paid globally 652 followers Endl is the operating layer for global money flows. It brings together crypto and fiat accounts, payouts, FX, and reconciliation into a single platform so product teams can eliminate fragmented financial tooling, reduce manual operational work, and scale cross-border operations with greater clarity and speed. Endl Launching today Endl is the global operating account for borderless businesses. Collect payments, hold funds in fiat or stablecoins, pay contractors in 160+ countries, and spend with corporate cards. All from one account built for fast, compliant global business operations. Free Launch Team",
+      "text": "Endl Where businesses pay and get paid globally 658 followers Where businesses pay and get paid globally 658 followers Endl is the operating layer for global money flows. It brings together crypto and fiat accounts, payouts, FX, and reconciliation into a single platform so product teams can eliminate fragmented financial tooling, reduce manual operational work, and scale cross-border operations with greater clarity and speed. Endl Launching today Endl is the global operating account for borderless businesses. Collect payments, hold funds in fiat or stablecoins, pay contractors in 160+ countries, and spend with corporate cards. All from one account built for fast, compliant global business operations. Free Launch Team",
       "score": 7,
       "stars": null,
       "forks": null
@@ -375,7 +375,7 @@
       "url": "https://www.producthunt.com/products/workbuddy-2",
       "published": "2026-06-29T19:39:48-07:00",
       "summary": "Produce sharpened results faster with a team of AI experts Discussion | Link",
-      "text": "Launching today WorkBuddy Produce sharpened results faster with a team of AI experts 489 followers Produce sharpened results faster with a team of AI experts 489 followers Tencent WorkBuddy is an AI agent built for everyday office work. Make a request. Guide your AI expert team. Bring in a second opinion. Get sharpened, ready-to-use results.",
+      "text": "Launching today WorkBuddy Produce sharpened results faster with a team of AI experts 495 followers Produce sharpened results faster with a team of AI experts 495 followers Tencent WorkBuddy is an AI agent built for everyday office work. Make a request. Guide your AI expert team. Bring in a second opinion. Get sharpened, ready-to-use results.",
       "score": 7,
       "stars": null,
       "forks": null
@@ -389,7 +389,7 @@
       "url": "https://www.producthunt.com/products/trycase",
       "published": "2026-06-08T15:02:08-07:00",
       "summary": "Disposable test environments for AI coding agents Discussion | Link",
-      "text": "Launching today TryCase Disposable test environments for AI coding agents 178 followers Disposable test environments for AI coding agents 178 followers TryCase gives AI coding agents disposable Linux environments to run apps, test changes end to end, capture screenshots and recordings, and return verified code instead of asking you to test manually.",
+      "text": "Launching today TryCase Disposable test environments for AI coding agents 180 followers Disposable test environments for AI coding agents 180 followers TryCase gives AI coding agents disposable Linux environments to run apps, test changes end to end, capture screenshots and recordings, and return verified code instead of asking you to test manually.",
       "score": 7,
       "stars": null,
       "forks": null
@@ -417,8 +417,22 @@
       "url": "https://www.producthunt.com/products/pennen",
       "published": "2026-07-03T14:30:43-07:00",
       "summary": "One quiet handwritten page a day. No feed, no AI. Discussion | Link",
-      "text": "Launching today Pennen One quiet handwritten page a day. No feed, no AI. 68 followers One quiet handwritten page a day. No feed, no AI. 68 followers Pennen is a calm, private, handwriting-first daily journal for iPad and Apple Pencil. One dated page per day, in real ink: past pages seal and become read-only, emoji stickers peel and press on, and the streak forgives — a one-line night still counts. Your pages live only on your iPad and in your own iCloud: no accounts, no ads, no analytics, no AI reading a word. Priced like a notebook — yearly with a 7-day free trial, or a one-time lifetime that costs less than a Moleskine.",
+      "text": "Launching today Pennen One quiet handwritten page a day. No feed, no AI. 69 followers One quiet handwritten page a day. No feed, no AI. 69 followers Pennen is a calm, private, handwriting-first daily journal for iPad and Apple Pencil. One dated page per day, in real ink: past pages seal and become read-only, emoji stickers peel and press on, and the streak forgives — a one-line night still counts. Your pages live only on your iPad and in your own iCloud: no accounts, no ads, no analytics, no AI reading a word. Priced like a notebook — yearly with a 7-day free trial, or a one-time lifetime that costs less than a Moleskine.",
       "score": 5,
+      "stars": null,
+      "forks": null
+    },
+    {
+      "id": "89819b9e44976dea",
+      "source": "Hacker News",
+      "category": "tech",
+      "kind": "rss",
+      "title": "Completing a computer science degree on Coursera",
+      "url": "https://notesbylex.com/completing-a-computer-science-degree-on-coursera",
+      "published": "Sun, 05 Jul 2026 21:20:49 +0000",
+      "summary": "Comments",
+      "text": "Completing A Computer Science Degree On Coursera In September 2022, I impulsively signed up for a Bachelor's Degree in Computer Science after seeing an ad for it on Coursera. Getting a degree had been on my mind for quite some time, after a long career without one, but I wasn't sure how to go about it. And now, about 3 years and 9 months later (with the last 3 of those months spent waiting for my results), I've finally completed my degree - entirely after hours whilst working full-time. This article is a brief write-up of my experience. My Background My degree-less tech career spans nearly 21 years, with about 14 of those as a software developer and MLE. I left high school early as a teenager; I was ready to enter the workforce and become independent as early as possible. I got into tech through certifications like MCP, MCSA, and A+ (they were all the rage back then), which was enough to land a helpdesk job at 18. From there, I followed my interests, which eventually led to software engineering and, later, a focus on machine learning. So far, my lack of a degree hasn't been a barrier to my career. I've heard from colleagues that Australia tends to value experience and attitude over formal education, whereas the opposite can be true overseas, so maybe I got lucky in that respect. I'd go as far as to say that being \"self-taught\" is typically seen as a positive by employers, provided you appear to have actually taught yourself the skills needed to do the job. That said, I'm not really \"self-taught\" - I think \"self-educated\" is a better term. I've collected the skills I've needed for the jobs I wanted via MOOCs (shouts to David J. Malan's CS50, Andrew Ng's ML courses and Jeremy Howard's fastai), certificates, books, and Kaggle. I've always had something to put in the Educat...",
+      "score": 4,
       "stars": null,
       "forks": null
     },
@@ -459,7 +473,7 @@
       "url": "https://www.producthunt.com/products/toku-reader",
       "published": "2026-06-18T12:03:42-07:00",
       "summary": "Read & listen to native Japanese and Chinese, tap any word Discussion | Link",
-      "text": "Launching today Toku Reader Read & listen to native Japanese and Chinese, tap any word 61 followers Read & listen to native Japanese and Chinese, tap any word 61 followers Toku turns native Japanese and Chinese — articles, novels, podcasts, and YouTube videos — into something you can actually read. Tap any word for its reading, meaning, and dictionary, without leaving the page. On audio and video you get a synced, word-tappable transcript: tap to learn, slow it down, replay a line, or pause after each sentence to shadow it back. It runs its own JP/CN engine on-device with offline dictionaries — fast, private, no accounts, no streaks. Just reading.",
+      "text": "Launching today Toku Reader Read & listen to native Japanese and Chinese, tap any word 64 followers Read & listen to native Japanese and Chinese, tap any word 64 followers Toku turns native Japanese and Chinese — articles, novels, podcasts, and YouTube videos — into something you can actually read. Tap any word for its reading, meaning, and dictionary, without leaving the page. On audio and video you get a synced, word-tappable transcript: tap to learn, slow it down, replay a line, or pause after each sentence to shadow it back. It runs its own JP/CN engine on-device with offline dictionaries — fast, private, no accounts, no streaks. Just reading.",
       "score": 3,
       "stars": null,
       "forks": null
@@ -474,20 +488,6 @@
       "published": "Sun, 05 Jul 2026 23:31:30 +0000",
       "summary": "Comments",
       "text": "Disclaimer: no AI was used to write this. Any errors, awkward sentences, and weird tangents are 100% organic, free-range, and human-made. Picking up a puzzle I left lying around Last post, right at the end, I dropped a puzzle and walked away from it. Here it is again, because this whole post is basically me refusing to let it go. Imagine two files, and each one holds a million digits. The first one is pure noise — imagine I rolled a ten-sided die a million times and wrote down the results. The second one is the first million digits of . Now look at them the way a statistician would: count how often each digit from to shows up. In both files, every digit appears about a tenth of the time, so if you plot the two histograms you cannot tell them apart — both flat, both featureless. And you can run any “is this random?” test you like, because both files will pass. By every statistical measure, these two files are the same: both look like pure, incompressible randomness. And yet. One of these files I can send you in three lines. I write you a tiny program — “compute , print a million digits” — and you regenerate the file exactly. The other file I cannot shrink at all, and to send it to you I have to send the whole thing, digit by digit, because there is no shorter description of it than itself. So here is the entire post in one question: If the two files are statistically identical, why can I compress one and not the other? The thing is, this question does not have a simple answer, and I think that is exactly what makes it interesting. To get anywhere with it, we have to be careful about what the word “compressible” actually means — and once we are careful, it splits into two very different ideas. Most of this post is about pulling those two apart, and about a surprise waitin...",
-      "score": 2,
-      "stars": null,
-      "forks": null
-    },
-    {
-      "id": "9013c9ce63145737",
-      "source": "Hacker News",
-      "category": "tech",
-      "kind": "rss",
-      "title": "New AI tutor achieves 0.71-1.30 SD effect size in Dartmouth course [pdf]",
-      "url": "https://intextbooks.science.uu.nl/workshop2026/files/itb26_s1s2.pdf",
-      "published": "Sun, 05 Jul 2026 18:47:43 +0000",
-      "summary": "Comments",
-      "text": "",
       "score": 2,
       "stars": null,
       "forks": null
