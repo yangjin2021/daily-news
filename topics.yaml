@@ -1,0 +1,159 @@
+# 长期关注主题配置
+# 目标：让 daily-news 不只是抓新闻，而是围绕长期问题建立信息雷达。
+
+version: 1
+
+review_policy:
+  daily:
+    description: 每天阅读 outputs 和报告，标记高信号/噪音/空源。
+  weekly:
+    description: 每周复盘 topics、source_health、reports，决定升权、降权、删除或新增信源。
+  source_retention:
+    keep: 连续产生有效信号，保留并进入日报主视图。
+    observe: 观察 7 天，判断是否值得长期保留。
+    degrade: 保留但降权，除非命中强关键词才进入主报告。
+    remove: 连续空源或噪音源，下一次清理时删除。
+
+topics:
+  - name: Agent 工具生态
+    priority: P0
+    intent: 追踪 Agent 如何获得工具、技能、上下文、任务执行和多 Agent 协作能力。
+    keywords:
+      - agent
+      - AI agent
+      - Claude Code
+      - Codex
+      - MCP
+      - skill
+      - tools
+      - workflow
+      - multi-agent
+      - task board
+      - agent skills
+    categories:
+      - research-entry
+      - github-trending
+      - product
+      - ai-dev
+    action: 看到高信号项目时，判断是否能接入 daily-news 或作为独立工具试用。
+
+  - name: 网页抓取与信息入口
+    priority: P0
+    intent: 追踪网页、社区、视频、GitHub、RSS、动态页面等入口如何被 Agent 读取。
+    keywords:
+      - scraping
+      - crawler
+      - fetcher
+      - browser
+      - Playwright
+      - Scrapling
+      - RSS
+      - YouTube
+      - Reddit
+      - GitHub Trending
+      - dynamic page
+      - anti-bot
+    categories:
+      - crawler
+      - research-entry
+      - github-trending
+      - tech
+    action: 适合做抓取测试；优先检查是否能补足 trafilatura 抓不到的内容。
+
+  - name: AI 信息雷达与信源治理
+    priority: P0
+    intent: 建立信息源判断、去重、打分、分类、源健康和报告生成 pipeline。
+    keywords:
+      - radar
+      - news radar
+      - source health
+      - dedup
+      - OPML
+      - newsletter
+      - feed
+      - classification
+      - relevance
+      - signal
+      - noise
+    categories:
+      - ai-radar
+      - ai-dev
+      - tech
+    action: 将方法迁移到 collect.py、report.py、site/data 和 reports。
+
+  - name: 模型评估与科研智能
+    priority: P1
+    intent: 观察 AI 从答题能力走向研究判断、benchmark、科学推理和真实任务评估。
+    keywords:
+      - benchmark
+      - eval
+      - evaluation
+      - research
+      - science
+      - biology
+      - genomics
+      - reasoning
+      - decision-ready
+      - research taste
+    categories:
+      - ai
+      - ai-dev
+    action: 适合沉淀为长期趋势笔记；不一定每天行动，但值得周报追踪。
+
+  - name: AI 编程与工具调用稳定性
+    priority: P1
+    intent: 观察 Coding Agent、工具 schema、编辑器、测试环境、代码审查和发布流程。
+    keywords:
+      - coding agent
+      - tool schema
+      - apply_patch
+      - edit tool
+      - code review
+      - release
+      - test environment
+      - disposable environment
+      - CI
+      - Git
+    categories:
+      - ai-dev
+      - dev
+      - github-trending
+      - product
+    action: 直接影响本仓库能否被 GPT/Codex 稳定调用，优先转化为 AGENTS.md 或脚本改动。
+
+  - name: 开源安全与供应链
+    priority: P2
+    intent: 追踪开源依赖、许可证、secret scanning、漏洞数据库和维护者安全实践。
+    keywords:
+      - security
+      - compliance
+      - dependency
+      - open source
+      - license
+      - advisory
+      - vulnerability
+      - secret scanning
+      - supply chain
+      - maintainer
+    categories:
+      - dev
+      - tech
+    action: 适合进入周报；对 daily-news 仓库自身维护有参考价值。
+
+  - name: AI 产品与工作流
+    priority: P2
+    intent: 观察 Product Hunt 和市场上出现的 AI 工作流、AI 团队、AI 助理、知识库和 MCP 产品。
+    keywords:
+      - AI workspace
+      - AI agents
+      - MCP
+      - knowledge base
+      - docs
+      - monitoring
+      - productivity
+      - workflow
+      - team
+      - automation
+    categories:
+      - product
+    action: 只保留能启发 daily-news、Agent 工作流或内容系统的产品，泛产品降权。
