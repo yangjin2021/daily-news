@@ -1,23 +1,23 @@
-# Source Health - 2026-08-19
+# Source Health - 2026-08-20
 
-Generated at: 2026-08-19T07:51:33.807202+08:00
+Generated at: 2026-08-20T07:51:58.160883+08:00
 
 | Source | Type | State | Status | Items | Max score | Avg score | Duration | Priority | Topics |
 |---|---|---|---:|---:|---:|---:|---:|---|---|
-| Agent-Reach | github | keep | ok | 1 | 77 | 77.0 | 1.111s | P0 | Agent 工具生态, 网页抓取与信息入口 |
-| AI News Radar | github | keep | ok | 1 | 61 | 61.0 | 1.106s | P0 | AI 信息雷达与信源治理 |
-| Scrapling | github | keep | ok | 1 | 64 | 64.0 | 1.058s | P0 | 网页抓取与信息入口 |
-| Hacker News | rss | observe | ok | 8 | 36 | 18.62 | 3.18s | P2 | Agent 工具生态, 网页抓取与信息入口, AI 编程与工具调用稳定性 |
-| GitHub Blog | rss | keep | ok | 5 | 37 | 29.4 | 0.58s | P1 | AI 编程与工具调用稳定性, 开源安全与供应链 |
-| OpenAI Blog | rss | keep | ok | 5 | 40 | 30.4 | 4.044s | P1 | 模型评估与科研智能, AI 编程与工具调用稳定性 |
-| Anthropic News | rss | observe | empty | 0 | 0 | 0.0 | 0.204s | P2 | Agent 工具生态, AI 编程与工具调用稳定性 |
-| Google DeepMind Blog | rss | observe | empty | 0 | 0 | 0.0 | 0.848s | P2 | 模型评估与科研智能 |
-| The Batch | rss | observe | empty | 0 | 0 | 0.0 | 0.14s | P2 | 模型评估与科研智能, AI 信息雷达与信源治理 |
-| Product Hunt Daily | rss | degrade | partial | 8 | 14 | 6.0 | 0.773s | P2 | AI 产品与工作流, Agent 工具生态 |
-| Simon Willison | rss | keep | ok | 5 | 40 | 33.6 | 0.42s | P1 | AI 编程与工具调用稳定性, Agent 工具生态, 模型评估与科研智能 |
-| Daily JS | rss | observe | empty | 0 | 0 | 0.0 | 133.0s | P3 | AI 编程与工具调用稳定性 |
-| GitHub Trending Python | page | keep | ok | 1 | 55 | 55.0 | 1.398s | P1 | Agent 工具生态, 网页抓取与信息入口, AI 编程与工具调用稳定性 |
-| GitHub Trending | page | keep | ok | 1 | 56 | 56.0 | 1.152s | P1 | Agent 工具生态, 网页抓取与信息入口, AI 产品与工作流 |
+| Agent-Reach | github | keep | ok | 1 | 77 | 77.0 | 1.148s | P0 | Agent 工具生态, 网页抓取与信息入口 |
+| AI News Radar | github | keep | ok | 1 | 61 | 61.0 | 0.765s | P0 | AI 信息雷达与信源治理 |
+| Scrapling | github | keep | ok | 1 | 64 | 64.0 | 0.777s | P0 | 网页抓取与信息入口 |
+| Hacker News | rss | observe | ok | 8 | 30 | 20.62 | 1.569s | P2 | Agent 工具生态, 网页抓取与信息入口, AI 编程与工具调用稳定性 |
+| GitHub Blog | rss | keep | ok | 5 | 37 | 29.6 | 0.41s | P1 | AI 编程与工具调用稳定性, 开源安全与供应链 |
+| OpenAI Blog | rss | keep | ok | 5 | 44 | 33.4 | 2.571s | P1 | 模型评估与科研智能, AI 编程与工具调用稳定性 |
+| Anthropic News | rss | observe | empty | 0 | 0 | 0.0 | 0.122s | P2 | Agent 工具生态, AI 编程与工具调用稳定性 |
+| Google DeepMind Blog | rss | observe | empty | 0 | 0 | 0.0 | 0.461s | P2 | 模型评估与科研智能 |
+| The Batch | rss | observe | empty | 0 | 0 | 0.0 | 0.044s | P2 | 模型评估与科研智能, AI 信息雷达与信源治理 |
+| Product Hunt Daily | rss | degrade | partial | 8 | 16 | 9.62 | 0.391s | P2 | AI 产品与工作流, Agent 工具生态 |
+| Simon Willison | rss | keep | ok | 5 | 38 | 33.6 | 0.254s | P1 | AI 编程与工具调用稳定性, Agent 工具生态, 模型评估与科研智能 |
+| Daily JS | rss | observe | empty | 0 | 0 | 0.0 | 135.402s | P3 | AI 编程与工具调用稳定性 |
+| GitHub Trending Python | page | keep | ok | 1 | 59 | 59.0 | 1.278s | P1 | Agent 工具生态, 网页抓取与信息入口, AI 编程与工具调用稳定性 |
+| GitHub Trending | page | keep | ok | 1 | 53 | 53.0 | 1.182s | P1 | Agent 工具生态, 网页抓取与信息入口, AI 产品与工作流 |
 
 ## Warnings
 
