@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-26T09:54:58.369840+08:00",
+  "generated_at": "2026-09-27T09:43:58.454786+08:00",
   "sources": [
     {
       "name": "Agent-Reach",
@@ -16,9 +16,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-09-26T09:52:30.145551+08:00",
-      "finished_at": "2026-09-26T09:52:30.956171+08:00",
-      "duration_seconds": 0.811,
+      "started_at": "2026-09-27T09:41:30.220282+08:00",
+      "finished_at": "2026-09-27T09:41:31.198217+08:00",
+      "duration_seconds": 0.978,
       "max_score": 77,
       "average_score": 77.0
     },
@@ -36,9 +36,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-09-26T09:52:30.956195+08:00",
-      "finished_at": "2026-09-26T09:52:31.816268+08:00",
-      "duration_seconds": 0.86,
+      "started_at": "2026-09-27T09:41:31.198251+08:00",
+      "finished_at": "2026-09-27T09:41:32.148629+08:00",
+      "duration_seconds": 0.95,
       "max_score": 61,
       "average_score": 61.0
     },
@@ -56,9 +56,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-09-26T09:52:31.816297+08:00",
-      "finished_at": "2026-09-26T09:52:32.599964+08:00",
-      "duration_seconds": 0.784,
+      "started_at": "2026-09-27T09:41:32.148655+08:00",
+      "finished_at": "2026-09-27T09:41:33.066245+08:00",
+      "duration_seconds": 0.918,
       "max_score": 64,
       "average_score": 64.0
     },
@@ -75,14 +75,14 @@
         "网页抓取与信息入口",
         "AI 编程与工具调用稳定性"
       ],
-      "status": "partial",
+      "status": "ok",
       "item_count": 8,
-      "error": "trafilatura extracted empty text",
-      "started_at": "2026-09-26T09:52:32.599986+08:00",
-      "finished_at": "2026-09-26T09:52:37.642532+08:00",
-      "duration_seconds": 5.043,
-      "max_score": 26,
-      "average_score": 17.5
+      "error": "",
+      "started_at": "2026-09-27T09:41:33.066271+08:00",
+      "finished_at": "2026-09-27T09:41:36.308058+08:00",
+      "duration_seconds": 3.242,
+      "max_score": 32,
+      "average_score": 21.38
     },
     {
       "name": "GitHub Blog",
@@ -99,9 +99,9 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-09-26T09:52:37.642567+08:00",
-      "finished_at": "2026-09-26T09:52:38.105967+08:00",
-      "duration_seconds": 0.463,
+      "started_at": "2026-09-27T09:41:36.308084+08:00",
+      "finished_at": "2026-09-27T09:41:37.106819+08:00",
+      "duration_seconds": 0.799,
       "max_score": 33,
       "average_score": 23.6
     },
@@ -120,9 +120,9 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-09-26T09:52:38.105986+08:00",
-      "finished_at": "2026-09-26T09:52:40.581648+08:00",
-      "duration_seconds": 2.476,
+      "started_at": "2026-09-27T09:41:37.106846+08:00",
+      "finished_at": "2026-09-27T09:41:39.329064+08:00",
+      "duration_seconds": 2.222,
       "max_score": 33,
       "average_score": 29.6
     },
@@ -141,9 +141,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-09-26T09:52:40.581679+08:00",
-      "finished_at": "2026-09-26T09:52:40.760581+08:00",
-      "duration_seconds": 0.179,
+      "started_at": "2026-09-27T09:41:39.329093+08:00",
+      "finished_at": "2026-09-27T09:41:39.536569+08:00",
+      "duration_seconds": 0.207,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -161,9 +161,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-09-26T09:52:40.760609+08:00",
-      "finished_at": "2026-09-26T09:52:41.387767+08:00",
-      "duration_seconds": 0.627,
+      "started_at": "2026-09-27T09:41:39.536606+08:00",
+      "finished_at": "2026-09-27T09:41:40.202857+08:00",
+      "duration_seconds": 0.666,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -182,9 +182,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-09-26T09:52:41.387801+08:00",
-      "finished_at": "2026-09-26T09:52:41.659030+08:00",
-      "duration_seconds": 0.271,
+      "started_at": "2026-09-27T09:41:40.202897+08:00",
+      "finished_at": "2026-09-27T09:41:40.339398+08:00",
+      "duration_seconds": 0.137,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -203,11 +203,11 @@
       "status": "partial",
       "item_count": 8,
       "error": "trafilatura returned empty response; trafilatura returned empty response; trafilatura returned empty response",
-      "started_at": "2026-09-26T09:52:41.659054+08:00",
-      "finished_at": "2026-09-26T09:52:42.289482+08:00",
-      "duration_seconds": 0.63,
-      "max_score": 26,
-      "average_score": 7.75
+      "started_at": "2026-09-27T09:41:40.339430+08:00",
+      "finished_at": "2026-09-27T09:41:41.236917+08:00",
+      "duration_seconds": 0.898,
+      "max_score": 14,
+      "average_score": 5.88
     },
     {
       "name": "Simon Willison",
@@ -225,11 +225,11 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-09-26T09:52:42.289518+08:00",
-      "finished_at": "2026-09-26T09:52:42.808855+08:00",
-      "duration_seconds": 0.519,
+      "started_at": "2026-09-27T09:41:41.236961+08:00",
+      "finished_at": "2026-09-27T09:41:41.690490+08:00",
+      "duration_seconds": 0.454,
       "max_score": 35,
-      "average_score": 31.6
+      "average_score": 31.4
     },
     {
       "name": "Daily JS",
@@ -245,9 +245,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-09-26T09:52:42.808875+08:00",
-      "finished_at": "2026-09-26T09:54:55.831703+08:00",
-      "duration_seconds": 133.023,
+      "started_at": "2026-09-27T09:41:41.690520+08:00",
+      "finished_at": "2026-09-27T09:43:55.749437+08:00",
+      "duration_seconds": 134.059,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -267,11 +267,11 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-09-26T09:54:55.831744+08:00",
-      "finished_at": "2026-09-26T09:54:57.142388+08:00",
-      "duration_seconds": 1.311,
-      "max_score": 65,
-      "average_score": 65.0
+      "started_at": "2026-09-27T09:43:55.749490+08:00",
+      "finished_at": "2026-09-27T09:43:57.158838+08:00",
+      "duration_seconds": 1.409,
+      "max_score": 56,
+      "average_score": 56.0
     },
     {
       "name": "GitHub Trending",
@@ -289,17 +289,17 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-09-26T09:54:57.142408+08:00",
-      "finished_at": "2026-09-26T09:54:58.366726+08:00",
-      "duration_seconds": 1.224,
-      "max_score": 54,
-      "average_score": 54.0
+      "started_at": "2026-09-27T09:43:57.158863+08:00",
+      "finished_at": "2026-09-27T09:43:58.451476+08:00",
+      "duration_seconds": 1.293,
+      "max_score": 55,
+      "average_score": 55.0
     }
   ],
   "summary": {
-    "ok": 8,
+    "ok": 9,
     "empty": 4,
-    "partial": 2
+    "partial": 1
   },
   "states": {
     "keep": 8,
