@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T09:46:00.454964+08:00",
+  "generated_at": "2026-10-23T09:51:22.619400+08:00",
   "sources": [
     {
       "name": "Agent-Reach",
@@ -16,9 +16,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-10-22T09:43:33.617231+08:00",
-      "finished_at": "2026-10-22T09:43:34.621127+08:00",
-      "duration_seconds": 1.004,
+      "started_at": "2026-10-23T09:48:54.989952+08:00",
+      "finished_at": "2026-10-23T09:48:55.797569+08:00",
+      "duration_seconds": 0.808,
       "max_score": 77,
       "average_score": 77.0
     },
@@ -36,9 +36,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-10-22T09:43:34.621152+08:00",
-      "finished_at": "2026-10-22T09:43:35.631383+08:00",
-      "duration_seconds": 1.01,
+      "started_at": "2026-10-23T09:48:55.797605+08:00",
+      "finished_at": "2026-10-23T09:48:56.751985+08:00",
+      "duration_seconds": 0.954,
       "max_score": 61,
       "average_score": 61.0
     },
@@ -56,9 +56,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-10-22T09:43:35.631404+08:00",
-      "finished_at": "2026-10-22T09:43:36.648220+08:00",
-      "duration_seconds": 1.017,
+      "started_at": "2026-10-23T09:48:56.752019+08:00",
+      "finished_at": "2026-10-23T09:48:57.628127+08:00",
+      "duration_seconds": 0.876,
       "max_score": 75,
       "average_score": 75.0
     },
@@ -75,14 +75,14 @@
         "网页抓取与信息入口",
         "AI 编程与工具调用稳定性"
       ],
-      "status": "partial",
+      "status": "ok",
       "item_count": 8,
-      "error": "trafilatura extracted empty text",
-      "started_at": "2026-10-22T09:43:36.648240+08:00",
-      "finished_at": "2026-10-22T09:43:38.634673+08:00",
-      "duration_seconds": 1.986,
+      "error": "",
+      "started_at": "2026-10-23T09:48:57.628153+08:00",
+      "finished_at": "2026-10-23T09:49:01.388834+08:00",
+      "duration_seconds": 3.761,
       "max_score": 28,
-      "average_score": 20.5
+      "average_score": 19.75
     },
     {
       "name": "GitHub Blog",
@@ -99,11 +99,11 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-10-22T09:43:38.634699+08:00",
-      "finished_at": "2026-10-22T09:43:39.293634+08:00",
-      "duration_seconds": 0.659,
+      "started_at": "2026-10-23T09:49:01.388865+08:00",
+      "finished_at": "2026-10-23T09:49:02.073835+08:00",
+      "duration_seconds": 0.685,
       "max_score": 33,
-      "average_score": 26.8
+      "average_score": 28.4
     },
     {
       "name": "OpenAI Blog",
@@ -120,11 +120,11 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-10-22T09:43:39.293657+08:00",
-      "finished_at": "2026-10-22T09:43:40.839986+08:00",
-      "duration_seconds": 1.546,
-      "max_score": 42,
-      "average_score": 29.0
+      "started_at": "2026-10-23T09:49:02.073865+08:00",
+      "finished_at": "2026-10-23T09:49:03.599031+08:00",
+      "duration_seconds": 1.525,
+      "max_score": 44,
+      "average_score": 24.8
     },
     {
       "name": "Anthropic News",
@@ -141,9 +141,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-10-22T09:43:40.840011+08:00",
-      "finished_at": "2026-10-22T09:43:41.057315+08:00",
-      "duration_seconds": 0.217,
+      "started_at": "2026-10-23T09:49:03.599064+08:00",
+      "finished_at": "2026-10-23T09:49:03.872275+08:00",
+      "duration_seconds": 0.273,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -161,9 +161,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-10-22T09:43:41.057347+08:00",
-      "finished_at": "2026-10-22T09:43:41.855677+08:00",
-      "duration_seconds": 0.798,
+      "started_at": "2026-10-23T09:49:03.872312+08:00",
+      "finished_at": "2026-10-23T09:49:04.407588+08:00",
+      "duration_seconds": 0.535,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -182,9 +182,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-10-22T09:43:41.855708+08:00",
-      "finished_at": "2026-10-22T09:43:41.953668+08:00",
-      "duration_seconds": 0.098,
+      "started_at": "2026-10-23T09:49:04.407627+08:00",
+      "finished_at": "2026-10-23T09:49:04.466409+08:00",
+      "duration_seconds": 0.059,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -203,11 +203,11 @@
       "status": "partial",
       "item_count": 8,
       "error": "trafilatura returned empty response; trafilatura returned empty response; trafilatura returned empty response",
-      "started_at": "2026-10-22T09:43:41.953691+08:00",
-      "finished_at": "2026-10-22T09:43:42.610560+08:00",
-      "duration_seconds": 0.657,
-      "max_score": 11,
-      "average_score": 6.25
+      "started_at": "2026-10-23T09:49:04.466443+08:00",
+      "finished_at": "2026-10-23T09:49:04.861664+08:00",
+      "duration_seconds": 0.395,
+      "max_score": 10,
+      "average_score": 6.38
     },
     {
       "name": "Simon Willison",
@@ -225,11 +225,11 @@
       "status": "ok",
       "item_count": 5,
       "error": "",
-      "started_at": "2026-10-22T09:43:42.610594+08:00",
-      "finished_at": "2026-10-22T09:43:43.070535+08:00",
-      "duration_seconds": 0.46,
-      "max_score": 36,
-      "average_score": 33.2
+      "started_at": "2026-10-23T09:49:04.861715+08:00",
+      "finished_at": "2026-10-23T09:49:05.188705+08:00",
+      "duration_seconds": 0.327,
+      "max_score": 42,
+      "average_score": 32.2
     },
     {
       "name": "Daily JS",
@@ -245,9 +245,9 @@
       "status": "empty",
       "item_count": 0,
       "error": "",
-      "started_at": "2026-10-22T09:43:43.070554+08:00",
-      "finished_at": "2026-10-22T09:45:56.938503+08:00",
-      "duration_seconds": 133.868,
+      "started_at": "2026-10-23T09:49:05.188732+08:00",
+      "finished_at": "2026-10-23T09:51:20.972022+08:00",
+      "duration_seconds": 135.783,
       "max_score": 0,
       "average_score": 0.0
     },
@@ -267,9 +267,9 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-10-22T09:45:56.938541+08:00",
-      "finished_at": "2026-10-22T09:45:59.214699+08:00",
-      "duration_seconds": 2.276,
+      "started_at": "2026-10-23T09:51:20.972068+08:00",
+      "finished_at": "2026-10-23T09:51:22.449610+08:00",
+      "duration_seconds": 1.478,
       "max_score": 57,
       "average_score": 57.0
     },
@@ -289,17 +289,17 @@
       "status": "ok",
       "item_count": 1,
       "error": "",
-      "started_at": "2026-10-22T09:45:59.214717+08:00",
-      "finished_at": "2026-10-22T09:46:00.452168+08:00",
-      "duration_seconds": 1.237,
-      "max_score": 53,
-      "average_score": 53.0
+      "started_at": "2026-10-23T09:51:22.449639+08:00",
+      "finished_at": "2026-10-23T09:51:22.616011+08:00",
+      "duration_seconds": 0.166,
+      "max_score": 43,
+      "average_score": 43.0
     }
   ],
   "summary": {
-    "ok": 8,
+    "ok": 9,
     "empty": 4,
-    "partial": 2
+    "partial": 1
   },
   "states": {
     "keep": 8,
